@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MBX Café — Member System Portal</title>
+<style>
+  :root{
+    --coffee:#6F4E37;
+    --coffee-dark:#4A3222;
+    --gold:#C9A24B;
+    --charcoal:#2B2621;
+    --text:#3E362E;
+    --bg:#F6EFE4;
+    --card:#FFFFFF;
+    --border:#E9DFCB;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);font-family:Calibri,Arial,sans-serif;color:var(--text);}
+  .wrap{max-width:880px;margin:0 auto;padding:64px 24px 100px;}
+  header{margin-bottom:48px;}
+  .eyebrow{font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:10px;}
+  h1{font-size:36px;margin:0 0 10px 0;color:var(--charcoal);font-weight:700;font-family:Cambria,serif;}
+  .sub{font-size:16px;color:#7A6F62;line-height:1.6;max-width:620px;}
+  .group{margin-bottom:40px;}
+  .group-title{font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--coffee-dark);font-weight:700;margin-bottom:14px;}
+  .card{
+    display:flex;align-items:center;gap:18px;
+    background:var(--card);border:1px solid var(--border);border-radius:14px;
+    padding:20px 22px;margin-bottom:14px;text-decoration:none;color:inherit;
+    transition:box-shadow .15s ease, transform .15s ease;
+  }
+  .card:hover{box-shadow:0 8px 24px rgba(0,0,0,.08);transform:translateY(-1px);}
+  .card.placeholder{cursor:default;opacity:.6;}
+  .card.placeholder:hover{box-shadow:none;transform:none;}
+  .icon{
+    flex-shrink:0;width:44px;height:44px;border-radius:50%;background:var(--coffee);
+    color:#fff;display:flex;align-items:center;justify-content:center;
+    font-size:18px;font-weight:700;font-family:Cambria,serif;
+  }
+  .card-title{font-size:17px;font-weight:700;color:var(--charcoal);margin-bottom:3px;}
+  .card-desc{font-size:14px;color:#8A8073;line-height:1.5;}
+  .arrow{margin-left:auto;color:var(--coffee);font-size:20px;flex-shrink:0;}
+  footer{margin-top:56px;font-size:13px;color:#A69C8D;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">MBX Café — Member System</div>
+    <h1>ระบบ Member — เอกสารและคู่มือ</h1>
+    <div class="sub">รวมคู่มือการใช้งานและสไลด์อบรมของระบบ Member (Memberbox) ไว้ที่เดียว กดดูได้ทันทีจากลิงก์ด้านล่าง — หน้านี้จะอัปเดตทุกครั้งที่มีเอกสารใหม่</div>
+  </header>
+
+  <div class="group">
+    <div class="group-title">คู่มือการใช้งาน</div>
+    <div class="card placeholder">
+      <div class="icon">M</div>
+      <div>
+        <div class="card-title">คู่มือฉบับเต็ม</div>
+        <div class="card-desc">กำลังจัดทำ — จะอัปเดตลิงก์ที่นี่เมื่อพร้อมให้ตรวจสอบ</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-title">สไลด์อบรม (Training Presentation)</div>
+    <div class="card placeholder">
+      <div class="icon">1</div>
+      <div>
+        <div class="card-title">ยังไม่มีสไลด์อบรม</div>
+        <div class="card-desc">จะเพิ่มลิงก์ที่นี่เมื่อสร้างสไลด์แรกเสร็จ</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>MBX Café Internal System — จัดทำโดยทีมงาน</footer>
+</div>
+</body>
+</html>
