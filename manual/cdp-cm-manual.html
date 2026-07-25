@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>CDP-CM — คู่มือการใช้งาน</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --paper: #F0F1EB;
+    --paper-raised: #FFFFFF;
+    --paper-sunken: #E7E9E1;
+    --ink: #1E2A28;
+    --ink-soft: #52625D;
+    --ink-faint: #8B978F;
+    --line: #D7DBD0;
+    --accent: #C1501E;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #F3DCC8;
+    --accent-soft-line: #E3B692;
+    --teal: #2A6B60;
+    --teal-soft: #DCEAE5;
+    --teal-soft-line: #B7D3CA;
+    --shadow: 0 1px 2px rgba(30,42,40,.06), 0 6px 20px rgba(30,42,40,.08);
+    --radius: 3px;
+    --font-body: "Sarabun", "Noto Sans Thai", "Leelawadee UI", "Sukhumvit Set", ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: ui-monospace, "IBM Plex Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  }
+  :root[data-theme="dark"] {
+    --paper: #151A18;
+    --paper-raised: #1D2422;
+    --paper-sunken: #10130F;
+    --ink: #E9ECE6;
+    --ink-soft: #A5B2AB;
+    --ink-faint: #6C7A73;
+    --line: #2D3733;
+    --accent: #E2793F;
+    --accent-ink: #1A1008;
+    --accent-soft: #33231A;
+    --accent-soft-line: #5A3D28;
+    --teal: #63B4A2;
+    --teal-soft: #16261F;
+    --teal-soft-line: #2B4A3D;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px rgba(0,0,0,.35);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #151A18;
+      --paper-raised: #1D2422;
+      --paper-sunken: #10130F;
+      --ink: #E9ECE6;
+      --ink-soft: #A5B2AB;
+      --ink-faint: #6C7A73;
+      --line: #2D3733;
+      --accent: #E2793F;
+      --accent-ink: #1A1008;
+      --accent-soft: #33231A;
+      --accent-soft-line: #5A3D28;
+      --teal: #63B4A2;
+      --teal-soft: #16261F;
+      --teal-soft-line: #2B4A3D;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px rgba(0,0,0,.35);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--accent-soft); color: var(--ink); }
+
+  a { color: var(--teal); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--accent); }
+  a:focus-visible, button:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .shell {
+    display: grid;
+    grid-template-columns: 268px minmax(0, 1fr);
+    min-height: 100vh;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .side {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 28px 20px 28px 28px;
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .brand .mark {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .brand h1 {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -.01em;
+    text-wrap: balance;
+  }
+  .brand .sub {
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .side nav { display: flex; flex-direction: column; gap: 2px; }
+  .side nav a {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 7px 10px;
+    border-radius: var(--radius);
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 14.5px;
+  }
+  .side nav a:hover { background: var(--paper-sunken); color: var(--ink); }
+  .side nav a.active { background: var(--accent-soft); color: var(--ink); font-weight: 600; }
+  .side nav a .n {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    min-width: 1.4em;
+  }
+  .side nav a.active .n { color: var(--accent); }
+  .side .meta {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--ink-faint);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .side .meta code { font-family: var(--font-mono); }
+
+  /* ---------- Main ---------- */
+  main { min-width: 0; padding: 48px 40px 120px; }
+  .content { max-width: 760px; margin: 0 auto; }
+
+  section.chapter { padding-top: 12px; }
+  section.chapter + section.chapter {
+    margin-top: 64px;
+    padding-top: 48px;
+    border-top: 1px solid var(--line);
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .eyebrow .rule { flex: 1; height: 1px; background: var(--accent-soft-line); }
+
+  h2.title {
+    margin: 0 0 6px;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -.015em;
+    text-wrap: balance;
+  }
+  .dek {
+    color: var(--ink-soft);
+    font-size: 16px;
+    max-width: 62ch;
+    margin-bottom: 28px;
+  }
+
+  h3 {
+    font-size: 21px;
+    font-weight: 750;
+    letter-spacing: -.005em;
+    margin: 36px 0 12px;
+    text-wrap: balance;
+  }
+  h4 {
+    font-size: 16.5px;
+    font-weight: 700;
+    margin: 26px 0 10px;
+  }
+  p { margin: 0 0 14px; max-width: 68ch; }
+  ul, ol { margin: 0 0 16px; padding-left: 1.3em; max-width: 66ch; }
+  li { margin-bottom: 6px; }
+  li::marker { color: var(--ink-faint); font-family: var(--font-mono); font-size: .9em; }
+
+  strong { font-weight: 700; }
+  code, .field {
+    font-family: var(--font-mono);
+    font-size: .87em;
+    background: var(--paper-sunken);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: .08em .42em;
+    white-space: nowrap;
+  }
+
+  /* ---------- Callouts ---------- */
+  .callout {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 14px;
+    padding: 14px 18px;
+    border-radius: var(--radius);
+    border: 1px solid;
+    margin: 18px 0;
+    max-width: 68ch;
+  }
+  .callout .tag {
+    grid-column: 1 / -1;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout.note {
+    background: var(--teal-soft);
+    border-color: var(--teal-soft-line);
+  }
+  .callout.note .tag { color: var(--teal); }
+  .callout.warn {
+    background: var(--accent-soft);
+    border-color: var(--accent-soft-line);
+  }
+  .callout.warn .tag { color: var(--accent); }
+
+  /* ---------- Tables ---------- */
+  .table-wrap { overflow-x: auto; margin: 18px 0 24px; border: 1px solid var(--line); border-radius: var(--radius); }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 460px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th {
+    background: var(--paper-sunken);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--paper-sunken); }
+  td.num, th.num { font-variant-numeric: tabular-nums; text-align: right; }
+  td.center { text-align: center; }
+
+  /* ---------- Figures ---------- */
+  figure { margin: 22px 0; }
+  figure.shot {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    box-shadow: var(--shadow);
+    padding: 10px;
+    display: inline-block;
+    max-width: 100%;
+  }
+  figure.shot img { display: block; max-width: 100%; height: auto; border-radius: 3px; }
+  figcaption {
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    margin-top: 8px;
+    padding: 0 2px;
+    max-width: 60ch;
+  }
+  figcaption .field { margin-right: 0; }
+
+  /* ---------- Mermaid card ---------- */
+  .diagram {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 22px;
+    margin: 22px 0 26px;
+    overflow-x: auto;
+    box-shadow: var(--shadow);
+  }
+  .diagram .cap {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 14px;
+  }
+
+  /* ---------- Step list ---------- */
+  .steps { list-style: none; padding: 0; margin: 20px 0; display: flex; flex-direction: column; gap: 22px; }
+  .steps > li { display: grid; grid-template-columns: 34px 1fr; gap: 14px; }
+  .steps > li .num {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .steps > li > div > :first-child { margin-top: 6px; }
+
+  /* ---------- Status pills ---------- */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: .04em;
+    padding: 2px 10px 3px;
+    border-radius: 99px;
+    border: 1px solid;
+    font-weight: 600;
+  }
+  .pill.ok { color: var(--teal); background: var(--teal-soft); border-color: var(--teal-soft-line); }
+  .pill.wait { color: var(--accent); background: var(--accent-soft); border-color: var(--accent-soft-line); }
+  .pill.off { color: var(--ink-faint); background: var(--paper-sunken); border-color: var(--line); }
+
+  /* ---------- Overview grid (index) ---------- */
+  .role-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin: 24px 0 30px;
+  }
+  .role-card {
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+  }
+  .role-card .k { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .role-card p { font-size: 13.8px; margin: 0; color: var(--ink-soft); }
+
+  .toc-cards { display: flex; flex-direction: column; gap: 10px; margin: 22px 0 8px; }
+  .toc-card {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 16px;
+    align-items: start;
+    padding: 14px 16px;
+    background: var(--paper-raised);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--ink);
+    box-shadow: var(--shadow);
+  }
+  .toc-card:hover { border-color: var(--accent-soft-line); }
+  .toc-card .n { font-family: var(--font-mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+  .toc-card h4 { margin: 0 0 4px; font-size: 15.5px; }
+  .toc-card p { margin: 0; font-size: 13.3px; color: var(--ink-soft); max-width: 56ch; }
+
+  footer.done {
+    max-width: 760px;
+    margin: 60px auto 0;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 900px) {
+    .shell { grid-template-columns: 1fr; }
+    .side {
+      position: sticky;
+      height: auto;
+      flex-direction: row;
+      align-items: center;
+      overflow-x: auto;
+      padding: 14px 16px;
+      gap: 16px;
+      z-index: 5;
+      background: var(--paper);
+    }
+    .brand { flex-direction: row; align-items: baseline; gap: 8px; white-space: nowrap; }
+    .brand .sub { display: none; }
+    .side nav { flex-direction: row; }
+    .side .meta { display: none; }
+    main { padding: 28px 18px 100px; }
+    .role-grid { grid-template-columns: 1fr; }
+  }
+
+  .diagram img.diagram-img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand">
+      <span class="mark">MX GROUP · ODOO</span>
+      <h1>CDP-CM คู่มือ</h1>
+      <span class="sub">Campaign &amp; Data Platform — Campaign Module</span>
+    </div>
+    <nav id="sidenav">
+      <a href="#overview" class="n0"><span class="n">00</span>ภาพรวมคู่มือ</a>
+      <a href="#ch1" class="n1"><span class="n">01</span>Flow รวมทั้งระบบ</a>
+      <a href="#ch2" class="n2"><span class="n">02</span>ตั้งค่า Campaign</a>
+      <a href="#ch3" class="n3"><span class="n">03</span>Customer Journey</a>
+      <a href="#ch4" class="n4"><span class="n">04</span>Dashboard</a>
+      <a href="#ch5" class="n5"><span class="n">05</span>Automated Journey</a>
+    </nav>
+    <div class="meta">
+      <span>โมดูล <code>mx_campaign</code> · <code>mbx_frontend</code> · <code>mx_automated_journey</code></span>
+      <span>อ้างอิงจาก build+verify จริงบน production — 2026-07-23</span>
+    </div>
+  </aside>
+
+  <main>
+    <div class="content">
+
+      <section class="chapter" id="overview">
+        <div class="eyebrow">MX GROUP<span class="rule"></span>ODOO 19</div>
+        <h2 class="title">คู่มือการใช้งานระบบ CDP-CM</h2>
+        <p class="dek">Campaign &amp; Data Platform — Campaign Module ครอบคลุมฟีเจอร์ที่ build และ verify จริงบน production (<code>odoo19-mbxai</code>) เรียงตามลำดับที่ใช้งานจริง: ตั้งค่าแคมเปญ → ลูกค้าได้รับ/ใช้สิทธิ์ → ดูผลที่ dashboard → ตั้งระบบอัตโนมัติ</p>
+
+        <div class="callout note">
+          <span class="tag">ขอบเขต Screenshot</span>
+          <p>รูปทั้งหมดในคู่มือนี้ (Backend: Campaign / Reward / Segment / Dashboard / Automated Journey, หน้า <code>/coupons</code> ของแอพสมาชิก, และหน้าจอ POS ตอน Enter Code) capture จากการทดสอบจริงทั้งหมด — รวมถึงธุรกรรม POS ที่ชำระเงินจริงจนคูปองถูกใช้จริง ไม่ใช่ mockup ทั้งเล่ม</p>
+        </div>
+
+        <h3>3 ส่วนที่ต้องตั้งค่าให้เข้าคู่กัน</h3>
+        <div class="role-grid">
+          <div class="role-card">
+            <div class="k">Campaign</div>
+            <p>กำหนด "ใครคือกลุ่มเป้าหมาย" — เมนู Campaigns (CDP-CM)</p>
+          </div>
+          <div class="role-card">
+            <div class="k">Reward / Privilege</div>
+            <p>กำหนด "สิทธิ์/ของรางวัล" ที่จะแจก และผูกจำกัดเฉพาะคนใน Campaign — เมนู Sales → Loyalty Programs</p>
+          </div>
+          <div class="role-card">
+            <div class="k">POS</div>
+            <p>จุดที่ลูกค้า "ใช้สิทธิ์จริง" ที่หน้าร้าน</p>
+          </div>
+        </div>
+
+        <h3>สารบัญ</h3>
+        <div class="toc-cards">
+          <a class="toc-card" href="#ch1">
+            <span class="n">01</span>
+            <div><h4>ภาพรวมระบบและ Flow รวม</h4><p>Flow รวมทั้งระบบตั้งแต่สร้างแคมเปญจนถึงลูกค้าใช้สิทธิ์จริง — ใครทำอะไรที่ไหน</p></div>
+          </a>
+          <a class="toc-card" href="#ch2">
+            <span class="n">02</span>
+            <div><h4>การตั้งค่า Campaign แต่ละประเภท</h4><p>วิธีตั้งค่า Campaign ทั้ง 7 รูปแบบ พร้อมระบุว่าแบบไหนใช้งานได้เต็มรูปแบบแล้ว แบบไหนยังต้องพัฒนาเพิ่ม</p></div>
+          </a>
+          <a class="toc-card" href="#ch3">
+            <span class="n">03</span>
+            <div><h4>Customer Journey — รับคูปองถึงใช้งาน</h4><p>มุมมองฝั่งลูกค้า: ได้รับเชิญ → คูปองออกอัตโนมัติ → เปิดแอพดูคูปอง → พนักงานพิมพ์โค้ดที่ POS</p></div>
+          </a>
+          <a class="toc-card" href="#ch4">
+            <span class="n">04</span>
+            <div><h4>Dashboard และการวัดผล</h4><p>อ่านผล Dashboard: KPI, Funnel, ยอดขายรายเดือนแยกบริษัท, Engagement</p></div>
+          </a>
+          <a class="toc-card" href="#ch5">
+            <span class="n">05</span>
+            <div><h4>Automated Journey — ระบบส่งสิทธิ์อัตโนมัติ</h4><p>ตั้งกฎให้ระบบส่งคูปอง/สิทธิ์ให้ลูกค้าเองอัตโนมัติ — วันเกิด, coupon chain, product-purchase trigger</p></div>
+          </a>
+        </div>
+
+        <div class="callout note">
+          <span class="tag">ความเกี่ยวข้องกับ MXP</span>
+          <p>CDP-CM (<code>mx_campaign</code>) เป็น Campaign Module ที่ทำงานกับลูกค้าทั่วไปแบบกว้าง ส่วน MXP (<code>mbx_frontend</code>) เป็น Membership Platform เฉพาะสมาชิก — ทั้งสองเชื่อมกันตรงจุดที่ Reward/Privilege ถูกจำกัดสิทธิ์ให้เฉพาะคนใน Campaign Target list เท่านั้น</p>
+        </div>
+      </section>
+
+      <!-- ============ CHAPTER 1 ============ -->
+      <section class="chapter" id="ch1">
+        <div class="eyebrow">บทที่ 01<span class="rule"></span>FLOW รวม</div>
+        <h2 class="title">ภาพรวมระบบและ Flow รวม</h2>
+
+        <h3>Flow รวมทั้งระบบ</h3>
+        <div class="diagram">
+          <div class="cap">Mermaid · End-to-end Flow</div>
+          <img class="diagram-img" src="assets/cdpcm-diagram-endtoend-flow.png" alt="Mermaid diagram">
+        </div>
+
+        <h3>ใครทำอะไรที่ไหน</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ขั้นตอน</th><th>ทำโดย</th><th>ทำที่ไหน</th></tr></thead>
+            <tbody>
+              <tr><td>สร้างแคมเปญ + เพิ่ม targets</td><td>Marketing / Campaign Manager</td><td>เมนู Campaigns → Campaigns</td></tr>
+              <tr><td>ตั้งค่า Reward + ผูกแคมเปญ</td><td>Marketing / Campaign Manager</td><td>Sales → Loyalty Programs → tab MBX Membership</td></tr>
+              <tr><td>กด Invite</td><td>Marketing / Campaign Manager</td><td>ฟอร์มแคมเปญ → tab Targets → ปุ่ม Invite</td></tr>
+              <tr><td>รับคูปอง</td><td>ลูกค้า (สมาชิก)</td><td>แอพสมาชิก หน้า <code>/coupons</code></td></tr>
+              <tr><td>ใช้สิทธิ์</td><td>ลูกค้า + พนักงานหน้าร้าน</td><td>POS — Enter Code</td></tr>
+              <tr><td>ติดตามผล</td><td>Marketing</td><td>Campaigns → Dashboard / Reporting</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>สถานะ Journey ของ Target</h3>
+        <p>แต่ละคนใน target list มีสถานะเดินหน้าเรื่อยๆ ไม่ย้อนกลับ (ยกเว้นถูกยกเลิก):</p>
+        <p>
+          <span class="pill off">Draft</span> →
+          <span class="pill wait">Invited</span> →
+          <span class="pill wait">Responded</span> →
+          <span class="pill ok">Converted</span>
+          &nbsp;&nbsp;(หรือ <span class="pill off">Lost</span> ถ้ามาร์คด้วยมือ)
+        </p>
+        <ul>
+          <li><strong>Draft</strong> — อยู่ใน target list แล้ว แต่ยังไม่ถูกเชิญ</li>
+          <li><strong>Invited</strong> — เชิญแล้ว ระบบพยายามออกคูปองให้อัตโนมัติทันที</li>
+          <li><strong>Responded</strong> — ลูกค้ากดรับคูปอง/สิทธิ์แล้ว (อัปเดตอัตโนมัติตอนออกคูปองสำเร็จ)</li>
+          <li><strong>Converted</strong> — ลูกค้าใช้คูปองจริงแล้วที่ POS (อัปเดตอัตโนมัติผ่าน cron ทุก 60 นาที)</li>
+        </ul>
+        <p>ตัวเลข <strong>Sent / Opened(Claimed) / Redemptions(Converted)</strong> ที่เห็นใน Dashboard และหน้า Campaign นับจากสถานะเหล่านี้โดยตรง</p>
+
+        <figure class="shot">
+          <img src="assets/cdpcm-target-status.png" alt="สถานะ target ในแคมเปญทดสอบจริง">
+        </figure>
+        <figcaption>ตัวอย่างจริงจากแคมเปญทดสอบ — เห็นสถานะ Converted (เขียว) / Responded (ฟ้า) / Invited (เหลือง) ของแต่ละ target</figcaption>
+
+        <div class="callout note">
+          <span class="tag">Auto-issue ทำงานเฉพาะตอนกด Invite เท่านั้น</span>
+          <p>ถ้าเพิ่ม target เข้าแคมเปญที่ Invite ไปแล้วก่อนหน้านี้ ต้องกด Invite ให้ target ใหม่เหล่านั้นเองอีกครั้ง ระบบไม่ auto-invite ให้</p>
+        </div>
+        <div class="callout note">
+          <span class="tag">Reward ต้องตั้งค่าให้เสร็จก่อนกด Invite</span>
+          <p>ถ้ากด Invite ไปแล้วแต่ยังไม่มี Reward ผูกแคมเปญ ลูกค้าจะเข้าสถานะ Invited เฉยๆ โดยไม่มีคูปองออกให้ — ต้องไปตั้งค่า Reward ให้เสร็จก่อน แล้วค่อยกด Invite</p>
+        </div>
+      </section>
+
+      <!-- ============ CHAPTER 2 ============ -->
+      <section class="chapter" id="ch2">
+        <div class="eyebrow">บทที่ 02<span class="rule"></span>7 ประเภท</div>
+        <h2 class="title">การตั้งค่า Campaign แต่ละประเภท</h2>
+
+        <h3>ขั้นตอนพื้นฐาน (เหมือนกันทุกประเภท)</h3>
+        <p>ไม่ว่าจะทำแคมเปญแบบไหน ต้องผ่าน 4 ขั้นตอนนี้เสมอ — ส่วนที่ต่างกันในแต่ละประเภทคือ <strong>วิธีเลือก Target</strong> (ขั้นตอนที่ 2) เท่านั้น</p>
+
+        <ol class="steps">
+          <li>
+            <span class="num">1</span>
+            <div>
+              <p>เมนู <strong>Campaigns → Campaigns → New</strong> — กรอก Name, Type (ต้องมี Campaign Type อย่างน้อย 1 อันไว้ก่อน), Start/End Date</p>
+              <figure class="shot"><img src="assets/cdpcm-campaign-form-overview-tab.png" alt="ฟอร์ม Campaign เลย์เอาต์ใหม่ พร้อม tab Overview"></figure>
+              <figcaption>เลย์เอาต์ใหม่ (2026-07-23) — Campaign Details + Schedule เท่านั้นที่อยู่บนสุด</figcaption>
+              <div class="callout note">
+                <span class="tag">หน้าฟอร์มจัดใหม่ 2026-07-23</span>
+                <p>เดิมข้อมูล Budget, Goals, Funnel Performance เรียงยาวอยู่บนสุดทั้งหมด ตอนนี้ส่วนบนเหลือแค่ Campaign Details + Schedule (สิ่งที่จำเป็นตอนสร้างแคมเปญ) ส่วนที่เหลือย้ายไป tab <strong>Overview</strong> (แท็บแรก ก่อน Targets) คลิกเดียวเห็นครบเหมือนเดิม ไม่มีข้อมูลหาย</p>
+              </div>
+            </div>
+          </li>
+          <li>
+            <span class="num">2</span>
+            <div>
+              <p>ปุ่ม <strong>Add Targets</strong> บนฟอร์มแคมเปญ — เลือกโหมด แล้วดูรายละเอียดตามประเภทด้านล่าง</p>
+              <figure class="shot"><img src="assets/cdpcm-add-targets-wizard.png" alt="Add Targets wizard"></figure>
+            </div>
+          </li>
+          <li>
+            <span class="num">3</span>
+            <div>
+              <p>ตั้งค่า <strong>Reward</strong> ที่เมนู <strong>Sales → Loyalty Programs</strong> → เปิด Reward → tab <strong>MBX Membership</strong> → กลุ่ม "Restrict to Campaign(s)" → เลือกแคมเปญนี้</p>
+              <figure class="shot"><img src="assets/cdpcm-reward-restrict-campaign.png" alt="ตั้งค่า Reward ผูกกับ Campaign"></figure>
+            </div>
+          </li>
+          <li>
+            <span class="num">4</span>
+            <div><p>กลับมาที่แคมเปญ → tab <strong>Targets</strong> → เลือกแถว (หรือทั้งหมด) → ปุ่ม <strong>Invite</strong></p></div>
+          </li>
+        </ol>
+
+        <div class="callout note">
+          <span class="tag">Add Targets มี 3 โหมดให้เลือกเสมอ</span>
+          <p><strong>Select Customers Manually</strong> (เลือกทีละคน), <strong>From Segment (Domain Filter)</strong> (กรองด้วยเงื่อนไข), <strong>From CRM Leads</strong> (ดึงจาก Lead) — ถ้าจำนวนลูกค้าที่เพิ่มเกิน 2,000 คนในครั้งเดียว ระบบจะคิวเป็น Background Import Job แทนการเพิ่มทันที ดูสถานะได้ที่ปุ่ม <strong>Import Jobs</strong></p>
+        </div>
+        <div class="callout warn">
+          <span class="tag">Bug พบ+แก้แล้ว 2026-07-23 — Coupon Program ใหม่ต้องเคลียร์ field "Company"</span>
+          <p><code>loyalty.program</code> ทุกตัวจะ default ผูก Company เป็นบริษัทที่ user active อยู่ตอนสร้าง (ไม่มี UI เตือน) — ถ้าเผลอปล่อยไว้ โปรแกรมนั้นจะ<strong>มองไม่เห็นที่ POS ของบริษัทอื่นเลย</strong> โปรแกรม Coupon/Privilege ที่ใช้ร่วมกับ CDP-CM ควรเป็นสิทธิ์ข้ามบริษัททั้งเครือ จึงต้องเคลียร์ field Company ให้ว่างเปล่า (global) เสมอทุกครั้งที่สร้างใหม่</p>
+        </div>
+
+        <h3>สรุปสถานะทั้ง 7 ประเภท</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th class="num">#</th><th>ประเภท</th><th class="center">สถานะ</th><th>วิธี Target หลัก</th></tr></thead>
+            <tbody>
+              <tr><td class="num">1</td><td>Welcome (สมาชิกใหม่)</td><td class="center"><span class="pill ok">พร้อมใช้</span></td><td>Segment Filter ตามวันที่สมัคร</td></tr>
+              <tr><td class="num">2</td><td>Birthday</td><td class="center"><span class="pill ok">พร้อมใช้</span></td><td>Segment Filter / Automated Journey</td></tr>
+              <tr><td class="num">3</td><td>Tier (ระดับสมาชิก)</td><td class="center"><span class="pill ok">พร้อมใช้</span></td><td>Segment Filter ตาม Pricelist Level</td></tr>
+              <tr><td class="num">4</td><td>Personalize</td><td class="center"><span class="pill ok">พร้อมใช้</span></td><td>Select Customers Manually</td></tr>
+              <tr><td class="num">5</td><td>Inactive Member</td><td class="center"><span class="pill ok">พร้อมใช้</span></td><td>Segment สำเร็จรูป "Inactive Member"</td></tr>
+              <tr><td class="num">6</td><td>Active Member</td><td class="center"><span class="pill ok">พร้อมใช้</span></td><td>Segment สำเร็จรูป "Active Member"</td></tr>
+              <tr><td class="num">7</td><td>Top Spender</td><td class="center"><span class="pill ok">พร้อมใช้</span></td><td>Segment สำเร็จรูป "Top Spender" — Top 50</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>1. Welcome Campaign (สมาชิกใหม่)</h3>
+        <p><strong>ใช้ Segment Filter</strong> — เมนู Configuration → Customer Segments → New: Domain <code>Membership Joined At</code> มากกว่าหรือเท่ากับ N วันที่แล้ว (field จริงคือ <code>mbx_membership_joined_at</code>)</p>
+        <figure class="shot"><img src="assets/cdpcm-segment-domain-filter.png" alt="Customer Segment domain filter"></figure>
+        <p>ที่ Reward ฝั่ง MXP ยังมีเงื่อนไขซ้อนอีกชั้นคือ <strong>Privilege Condition = "New Member"</strong> — สองชั้นนี้ควรตั้งจำนวนวันให้ตรงกัน เพื่อไม่ให้ target list กว้าง/แคบกว่าเงื่อนไขจริงที่ reward เช็ค</p>
+
+        <h3>2. Birthday Campaign</h3>
+        <p><strong>ใช้ Segment Filter</strong> — Domain: <code>Birth Date</code> เดือนตรงกับเดือนปัจจุบัน — Reward ฝั่ง MXP มี <strong>Privilege Condition = "Birthday Month"</strong> เช็คซ้ำอัตโนมัติอยู่แล้วตอนกดรับ segment filter ฝั่ง campaign ทำหน้าที่แค่ "เลือกกลุ่มเพื่อยิง Invite" เท่านั้น</p>
+        <div class="callout note">
+          <span class="tag">ต้องรัน Add Targets ใหม่ทุกเดือนเอง — เว้นแต่ใช้ Automated Journey</span>
+          <p>วิธี Segment Filter ยังต้องกลับมากด Add Targets ทุกต้นเดือนเอง — ถ้าต้องการให้ระบบส่งคูปองวันเกิดให้เองอัตโนมัติทุกเดือนโดยไม่ต้องกดมือเลย ใช้โมดูลใหม่ <a href="#ch5">Automated Journey</a> แทนได้ (2026-07-23) เป็นคนละกลไกกัน ไม่ผ่าน Campaign Target เลย แต่ auto-confirm privilege claim ให้ลูกค้าตรงๆ ทุกเดือน</p>
+        </div>
+
+        <h3>3. Tier Campaign (ระดับสมาชิก)</h3>
+        <p><strong>ใช้ Segment Filter</strong> — Domain: <code>property_product_pricelist</code> → <code>mbx_level</code> เท่ากับ level ที่ต้องการ — ระดับสมาชิกผูกอยู่กับ Pricelist ที่ partner แต่ละคนถูก assign ไว้ ใช้ทำโปรโมชั่นเฉพาะระดับ เช่น "Level 8-10 รับสิทธิ์พิเศษ"</p>
+
+        <h3>4. Personalize Campaign</h3>
+        <p><strong>ใช้ Select Customers Manually</strong> — เลือกลูกค้าทีละคน/กลุ่มเล็กด้วยมือ เหมาะกับแคมเปญเฉพาะกิจ ไม่มีเงื่อนไขที่ระบุเป็นกฎตายตัวได้</p>
+
+        <h3>5. Inactive Member Campaign</h3>
+        <p><strong>ใช้ Segment Filter</strong> — เลือก segment สำเร็จรูป "Inactive Member (No Order in 90+ Days)" ได้เลย ครอบคลุมทั้งคนที่ซื้อครั้งสุดท้ายเกิน 90 วัน และคนที่ไม่เคยซื้อเลย</p>
+        <p><strong>เบื้องหลัง:</strong> ระบบมี field ใหม่บน <code>res.partner</code> — <code>Last Order Date</code> และ <code>Purchase Status</code> คำนวณจาก confirmed sale order อัตโนมัติทุกคืนผ่าน cron "Campaign: Refresh Customer Purchase Stats"</p>
+
+        <h3>6. Active Member Campaign</h3>
+        <p><strong>ใช้ Segment Filter</strong> — เลือก segment สำเร็จรูป "Active Member (Last Order ≤ 90 Days)" — ใช้ field/cron ชุดเดียวกับ Inactive Member</p>
+
+        <h3>7. Top Spender Campaign</h3>
+        <p><strong>ใช้ Segment Filter</strong> — เลือก segment สำเร็จรูป "Top Spender (Last 90 Days)" ต่างจาก 2 ประเภทบนตรงที่เป็นการ<strong>จัดอันดับ</strong>: มี field เสริม "Sort By" (<code>mx_spend_90d desc</code>) + "Limit" (ตั้งไว้ 50) — ปรับเป็น Top 100/Top 20 แก้ที่ field "Limit" ได้ตรงๆ ไม่ต้องแก้โค้ด</p>
+        <div class="callout warn">
+          <span class="tag">ปรับ window 90 วันได้จากซอร์สโค้ดเท่านั้น</span>
+          <p>ตัวเลข "90 วัน" เป็นค่าคงที่ในโค้ด (<code>PURCHASE_ACTIVE_WINDOW_DAYS</code> ใน <code>res_partner.py</code>) เปลี่ยนได้แต่ต้องแก้โค้ด+อัปเกรดโมดูลใหม่ ไม่ใช่ค่าที่ปรับได้จากหน้าจอ</p>
+        </div>
+      </section>
+
+      <!-- ============ CHAPTER 3 ============ -->
+      <section class="chapter" id="ch3">
+        <div class="eyebrow">บทที่ 03<span class="rule"></span>มุมมองลูกค้า</div>
+        <h2 class="title">Customer Journey — จากได้รับเชิญถึงใช้สิทธิ์จริง</h2>
+        <p class="dek">บทนี้มองจากมุมลูกค้า (สมาชิก) ตั้งแต่วินาทีที่ทีม Marketing กด Invite จนถึงพนักงานหน้าร้านปิดออเดอร์</p>
+
+        <div class="callout warn">
+          <span class="tag">สถานะปัจจุบัน — ยังไม่ใช่การ "สแกน" จริง</span>
+          <p>ตั้งใจให้ลูกค้ายื่นจอมือถือให้พนักงาน <strong>scan</strong> ที่ POS จึงทำ Barcode Rule ฝั่ง POS ไว้รองรับแล้ว แต่ทดสอบจริงพบว่าหน้า <code>/coupons</code> ที่ deploy อยู่ตอนนี้แสดงโค้ดเป็นตัวอักษรธรรมดาเท่านั้น ไม่มี QR/Barcode ให้สแกน — ใช้วิธี "พนักงานอ่านโค้ดจากจอลูกค้าแล้วพิมพ์เอง" ไปก่อน ตัดสินใจแล้วว่าจะพักเรื่องนี้ไว้ก่อน รอเลือกเครื่องสแกนที่จะใช้จริงหน้าร้าน</p>
+        </div>
+        <div class="callout note">
+          <span class="tag">ยืนยันด้วยธุรกรรมจริงแล้ว (2026-07-23)</span>
+          <p>ทดสอบ redeem จริงที่ MBX Café POS ครบ flow — พิมพ์โค้ด → ส่วนลดขึ้น → ชำระเงิน → คูปองถูกใช้จริง — screenshot ด้านล่างทั้งหมดมาจากธุรกรรมจริงนี้</p>
+        </div>
+
+        <h3>ขั้นตอนที่ 1 — ระบบออกคูปองให้อัตโนมัติ</h3>
+        <p>ทันทีที่ทีม Marketing กด <strong>Invite</strong> ระบบจะ: เช็คว่ามี Reward ตัวไหนผูก "Restrict to Campaign" กับแคมเปญนี้บ้าง → เช็คสิทธิ์ลูกค้าคนนี้ตามเงื่อนไขของ Reward → ถ้าผ่านเงื่อนไข ออกคูปองให้ทันที ไม่ต้องให้ลูกค้าเปิดแอพมากดรับเอง → อัปเดตสถานะ target เป็น <strong>Responded</strong> ทันที</p>
+        <div class="callout note">
+          <span class="tag">ถ้าลูกค้ายังไม่ผ่านเงื่อนไขตอน Invite</span>
+          <p>ระบบจะไม่ error และไม่บล็อกการ invite — target ยังคงสถานะ Invited และไม่มีคูปองออกให้ ตรวจสอบสาเหตุได้จากหน้า Privilege Claims (สถานะ Draft พร้อมบันทึกเหตุผลในช่อง Note)</p>
+        </div>
+
+        <h3>ขั้นตอนที่ 2 — ลูกค้าเปิดแอพดูคูปอง</h3>
+        <p>ลูกค้าเข้าแอพสมาชิกที่หน้า <code>/coupons</code> — เห็นคูปองทั้งหมดที่ตัวเองมีสิทธิ์เป็นการ์ดแบบ grid พร้อม tab กรองตามสถานะ, เรียงลำดับได้, แต่ละการ์ดแสดง<strong>โค้ดคูปองเป็นตัวอักษรตรงๆ</strong> (เช่น <code>CDPDEMOC-C5ED1A9D0F</code>)</p>
+        <figure class="shot"><img src="assets/cdpcm-coupons-app-list.png" alt="รายการคูปองของสมาชิก"></figure>
+        <figcaption>ตัวอย่างจริงจากคูปองที่ auto-issue จากแคมเปญ (login เป็นสมาชิกทดสอบจริง ไม่ใช่ backend)</figcaption>
+
+        <h3>ขั้นตอนที่ 3 — พนักงานพิมพ์โค้ดที่ POS</h3>
+        <ol class="steps">
+          <li><span class="num">1</span><div><p>เพิ่มสินค้าลงตะกร้า + ระบุลูกค้าตามปกติ แล้วกดปุ่ม <strong>"⋮" (More/Actions)</strong> มุมล่างซ้าย</p>
+            <figure class="shot"><img src="assets/cdpcm-pos-actions-menu.png" alt="POS Actions menu"></figure></div></li>
+          <li><span class="num">2</span><div><p>กด <strong>"Enter Code"</strong> เปิดช่องกรอกโค้ด (auto-focus พิมพ์ได้ทันที)</p>
+            <figure class="shot"><img src="assets/cdpcm-pos-enter-code-empty.png" alt="POS Enter Code ช่องว่าง"></figure></div></li>
+          <li><span class="num">3</span><div><p>ให้ลูกค้าอ่านโค้ดตัวอักษร (หรือยื่นจอให้ดู) พนักงานพิมพ์เข้าไปตรงๆ กด <strong>Apply</strong> — ระบบจับคู่คูปองใส่ส่วนลดเข้าออเดอร์ทันที</p>
+            <figure class="shot"><img src="assets/cdpcm-pos-discount-applied.png" alt="ส่วนลดจากคูปองขึ้นในตะกร้า"></figure></div></li>
+        </ol>
+        <div class="callout note">
+          <span class="tag">Barcode Rule ฝั่ง POS ทำไว้รอแล้ว แค่ยังไม่มีอะไรให้สแกน</span>
+          <p>เพิ่ม Barcode Rule "MBX Coupon Codes" ไว้แล้วให้ POS รู้จักรูปแบบโค้ด MBX (<code>PREFIX-XXXXXXXXXX</code>) ทันทีที่หน้า <code>/coupons</code> มี QR/Barcode ให้สแกนจริงเมื่อไหร่ ฝั่ง POS พร้อมใช้งานได้เลยไม่ต้องแก้อะไรเพิ่ม</p>
+        </div>
+
+        <h3>ขั้นตอนที่ 4 — ปิดออเดอร์ตามปกติ</h3>
+        <p>พนักงานคิดเงินต่อตามปกติ ไม่มีขั้นตอนพิเศษเพิ่มเติม คูปองจะถูกใช้ (points เหลือ 0) ทันทีที่ออเดอร์เสร็จสมบูรณ์ ใบเสร็จแสดงบรรทัดส่วนลดจากคูปองด้วย</p>
+        <figure class="shot"><img src="assets/cdpcm-pos-receipt.png" alt="ใบเสร็จหลังชำระเงินสำเร็จ"></figure>
+
+        <h3>ขั้นตอนที่ 5 — ระบบอัปเดตสถานะแคมเปญให้อัตโนมัติ</h3>
+        <p>การใช้คูปองที่ POS เกิดนอกระบบ CDP-CM โดยตรง จึงมี <strong>cron ทำงานทุก 60 นาที</strong> คอยเช็คว่าคูปองที่ออกไปแล้วถูกใช้หรือยัง — ถ้าใช้แล้ว จะอัปเดต target เป็น <strong>Converted</strong> ให้อัตโนมัติ (ไม่เกิน 1 ชั่วโมงหลังใช้จริง)</p>
+
+        <h3>สรุป Flow เต็ม (มุมมองลูกค้า)</h3>
+        <div class="diagram">
+          <div class="cap">Mermaid · Sequence — Customer Journey</div>
+          <img class="diagram-img" src="assets/cdpcm-diagram-customer-journey-sequence.png" alt="Mermaid diagram">
+        </div>
+      </section>
+
+      <!-- ============ CHAPTER 4 ============ -->
+      <section class="chapter" id="ch4">
+        <div class="eyebrow">บทที่ 04<span class="rule"></span>วัดผล</div>
+        <h2 class="title">Dashboard และการวัดผล</h2>
+        <p class="dek">เมนู <strong>Campaigns → Dashboard</strong></p>
+
+        <h3>Filter บนสุด — มีผลกับทุกอย่างในหน้านี้</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Filter</th><th>ทำอะไร</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Date Range</strong><br>(Month/Quarter/Year/All)</td><td>กรองช่วงเวลาของ KPI, Revenue by Campaign, Status, Conversion by Type, Top Campaigns</td></tr>
+              <tr><td><strong>Company</strong><br>(แถบ pill ด้านบน)</td><td>เลือกได้หลายบริษัทพร้อมกัน ค่าเริ่มต้น = ทุกบริษัทที่ user มีสิทธิ์เห็น — มีผลกับทุก card ในหน้า</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figure class="shot"><img src="assets/cdpcm-dashboard-kpi.png" alt="Dashboard KPI พร้อม company filter"></figure>
+        <div class="callout note">
+          <span class="tag">Activity Timeline (30 วันล่าสุด) ไม่ผูกกับ Date Range</span>
+          <p>Card นี้แสดงย้อนหลัง 30 วันเสมอไม่ว่าจะเลือก Date Range เป็นอะไร (แต่ยังกรองตาม Company filter ตามปกติ)</p>
+        </div>
+
+        <h3>แถว KPI (บนสุด)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>การ์ด</th><th>ความหมาย</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Active Campaigns</strong></td><td>จำนวนแคมเปญสถานะ Active ในช่วงเวลา+บริษัทที่เลือก</td></tr>
+              <tr><td><strong>Budget Planned</strong></td><td>งบที่ตั้งไว้รวมทุกแคมเปญในช่วงที่เลือก</td></tr>
+              <tr><td><strong>Total Revenue</strong></td><td>รายได้ที่ผูกกับแคมเปญ</td></tr>
+              <tr><td><strong>Avg ROI</strong></td><td>ค่าเฉลี่ย (Revenue − Budget Spent) / Budget Spent</td></tr>
+              <tr><td><strong>Avg Conversion</strong></td><td>ค่าเฉลี่ย % target ที่ถึงสถานะ Converted</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Campaign Timeline + Revenue Trend</h3>
+        <p>Gantt แสดงช่วงเวลาแคมเปญแต่ละอันในปีปัจจุบัน คู่กับกราฟเส้น <strong>Revenue</strong> รายเดือน (12 เดือน ปีปัจจุบัน)</p>
+        <div class="callout note">
+          <span class="tag">เส้น "Revenue" นับเฉพาะยอดขายที่ผูกกับแคมเปญเท่านั้น</span>
+          <p>ดึงจาก Sale Order ที่ระบุแคมเปญ (<code>mx_campaign_id</code>) และยืนยันแล้วเท่านั้น — ถ้าลูกค้าซื้อของโดยไม่ได้มาจากแคมเปญไหนเลย ยอดนั้นจะ<strong>ไม่</strong>รวมอยู่ในเส้นนี้</p>
+        </div>
+
+        <h3>ยอดขายรายเดือน แยกตามบริษัท</h3>
+        <p>Chart ใหม่ — แสดง<strong>ยอดขายทั้งหมดของบริษัท</strong> (ทุกออเดอร์ที่ยืนยันแล้ว ไม่จำกัดว่าต้องผูกแคมเปญ) แยกเป็นชั้นตามบริษัท ใช้เทียบสัดส่วนว่า "ยอดขายจากแคมเปญ" คิดเป็นกี่ % ของยอดขายทั้งหมดในแต่ละเดือน</p>
+        <figure class="shot"><img src="assets/cdpcm-dashboard-revenue-vs-total-sales.png" alt="กราฟยอดขายรายเดือนแยกบริษัท เทียบกับ Revenue Trend"></figure>
+        <figcaption>Revenue Trend (บน) อยู่หลักแสน ในขณะที่ยอดขายรวมทั้งบริษัท (ล่าง) อยู่หลักล้าน — เห็นชัดว่ายอดจากแคมเปญเป็นสัดส่วนเล็กน้อยเมื่อเทียบกับยอดขายทั้งหมด</figcaption>
+
+        <h3>Revenue by Campaign + Status Distribution</h3>
+        <p><strong>Revenue by Campaign</strong> — บาร์ชาร์ท เรียงแคมเปญที่ทำรายได้เยอะสุด 10 อันดับแรก · <strong>Status Distribution</strong> — พายชาร์ท สัดส่วนแคมเปญตามสถานะ</p>
+
+        <h3>Engagement Distribution</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ระดับ</th><th>เงื่อนไข</th></tr></thead>
+            <tbody>
+              <tr><td><span class="pill ok">Champion</span></td><td>Converted ≥ 2 ครั้ง และติดต่อล่าสุดภายใน 30 วัน</td></tr>
+              <tr><td><span class="pill wait">Hot</span></td><td>Converted ≥ 1 ครั้ง และติดต่อล่าสุดภายใน 60 วัน</td></tr>
+              <tr><td><span class="pill wait">Warm</span></td><td>เคยอยู่ในแคมเปญอย่างน้อย 1 ครั้ง และติดต่อล่าสุดภายใน 90 วัน</td></tr>
+              <tr><td><span class="pill off">Cold</span></td><td>นอกเหนือจากเงื่อนไขข้างต้น</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Smart Insights &amp; รายละเอียดแคมเปญ</h3>
+        <p>กล่องข้อความสรุปข้อสังเกตอัตโนมัติ (rule-based ไม่ใช่ AI จริง) เทียบกิจกรรม 30 วันล่าสุดกับ 30 วันก่อนหน้า — ใช้เป็นจุดเริ่มสังเกตความผิดปกติ ไม่ใช่บทสรุปที่ต้องเชื่อทั้งหมด คลิกที่แคมเปญจะเปิด <strong>Drawer</strong> ด้านข้างแสดงรายละเอียดเจาะลึกโดยไม่ต้องออกจากหน้า Dashboard</p>
+      </section>
+
+      <!-- ============ CHAPTER 5 ============ -->
+      <section class="chapter" id="ch5">
+        <div class="eyebrow">บทที่ 05<span class="rule"></span>ใหม่ · 2026-07-23</div>
+        <h2 class="title">Automated Journey — ระบบส่งสิทธิ์อัตโนมัติ</h2>
+        <p class="dek">ตั้งกฎครั้งเดียว ระบบทำงานให้เองต่อเนื่อง ไม่ต้องกลับมากดมือทุกครั้ง</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>สถานการณ์</th><th>Trigger</th><th>ตัวอย่าง</th></tr></thead>
+            <tbody>
+              <tr><td><strong>วันเกิดลูกค้า</strong></td><td>Recurring (รายเดือน)</td><td>ทุกต้นเดือน ลูกค้าที่เกิดเดือนนี้ได้รับคูปองวันเกิดอัตโนมัติ</td></tr>
+              <tr><td><strong>ใช้คูปอง A → ได้ B ต่อ</strong></td><td>Event: Coupon Used</td><td>ใช้คูปองต้อนรับที่ POS แล้ว ได้คูปองที่ 2 ตามมาไม่กี่วันให้หลัง</td></tr>
+              <tr><td><strong>ซื้อสินค้า A → ได้คูปอง X</strong></td><td>Event: Product Purchased</td><td>ซื้อสินค้าตัวที่ตั้งไว้ครั้งแรก ได้คูปองพิเศษกลับมา</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>ไม่ว่ากรณีไหน ระบบจะออกให้<strong>ครั้งแรกที่เข้าเงื่อนไขเท่านั้น</strong> ไม่ส่งซ้ำ (วันเกิด = ปีละ 1 ครั้งตามรอบปี, coupon/product trigger = ครั้งแรกที่ทำครั้งเดียวตลอดไป)</p>
+
+        <h3>กลไกเบื้องหลัง (คนละแบบกันโดยตั้งใจ)</h3>
+        <div class="diagram">
+          <div class="cap">Mermaid · Recurring vs Event-based</div>
+          <img class="diagram-img" src="assets/cdpcm-diagram-recurring-vs-event.png" alt="Mermaid diagram">
+        </div>
+
+        <ul>
+          <li><strong>Recurring ไม่ผ่าน Campaign/Campaign Target เลย</strong> — อ้างอิง Privilege Reward ตรงๆ ใช้ระบบ "1 สิทธิ์ต่อปี" ที่มีอยู่แล้วในระบบ MXP privilege claim (ตัวเดียวกับที่ลูกค้ากดรับเองใน <code>/coupons</code>) ต่างกันแค่ระบบกดแทนให้</li>
+          <li><strong>Event-based ผ่าน Campaign Target เหมือน flow ปกติทุกอย่าง</strong> (ดู <a href="#ch1">บทที่ 1</a>) — rule แค่เป็นตัวช่วย "กด Invite" ให้อัตโนมัติแทนคน ต้องมี Campaign + Reward ที่ผูก "Restrict to Campaign" ไว้ก่อนเหมือนเดิม</li>
+        </ul>
+
+        <div class="callout warn">
+          <span class="tag">Rule ใหม่ไม่ย้อนหลัง</span>
+          <p>Event-based rule จะนับเฉพาะเหตุการณ์ที่เกิด<strong>หลังจากวันที่สร้าง rule</strong>เท่านั้น — เปิด rule ใหม่จะไม่ไปดึงประวัติการซื้อ/การใช้คูปองเก่าย้อนหลังมา enroll ทั้งหมดทันที (ป้องกันส่งคูปองจำนวนมากผิดคาดตอนเปิดใช้งานครั้งแรก)</p>
+        </div>
+
+        <h3>วิธีตั้งค่า</h3>
+        <p>เมนู <strong>Campaigns → Configuration → Automated Journey Rules → New</strong></p>
+
+        <h4>แบบ Recurring (วันเกิด)</h4>
+        <ol>
+          <li>เลือก Trigger Type = <strong>Recurring</strong></li>
+          <li>เลือก <strong>Privilege Reward to Auto-Claim</strong> — ต้องเป็น Reward ที่เปิด "Enable Privilege Claim" ไว้แล้ว และตั้ง <strong>Privilege Condition = Birthday Month</strong> — ระบบใช้ <strong>Limit Period</strong> ของ reward นั้นเป็นตัวกันไม่ให้ออกซ้ำ (ปกติตั้ง "Per Year")</li>
+        </ol>
+        <figure class="shot"><img src="assets/cdpcm-automated-journey-recurring-form.png" alt="ฟอร์ม Automated Journey Rule แบบ Recurring"></figure>
+
+        <h4>แบบ Event-based (Coupon Used / Product Purchased)</h4>
+        <ol>
+          <li>เลือก Trigger Type = <strong>Event-based</strong></li>
+          <li>เลือก <strong>Target Campaign</strong> — แคมเปญที่จะเพิ่มลูกค้าเข้าไปเมื่อเข้าเงื่อนไข (ต้องมี Reward ผูก "Restrict to Campaign" ไว้แล้ว)</li>
+          <li>เลือก <strong>Event Source</strong>: <code>Coupon Used</code> → เลือก Source Coupon Program, หรือ <code>Product Purchased</code> → เลือก Source Product</li>
+          <li>ตั้ง <strong>Delay (days)</strong> — 0 = ส่งทันทีที่ตรวจพบ, ใส่ตัวเลข = หน่วงกี่วันก่อนค่อยเพิ่มเข้าแคมเปญ</li>
+        </ol>
+        <figure class="shot"><img src="assets/cdpcm-automated-journey-event-form.png" alt="ฟอร์ม Automated Journey Rule แบบ Event-based"></figure>
+
+        <h3>ดูประวัติการทำงาน</h3>
+        <p>เมนู <strong>Campaigns → Reporting → Automation Log</strong> — แสดงว่ากฎไหนทำงานกับลูกค้าคนไหนเมื่อไหร่</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>สถานะ</th><th>ความหมาย</th></tr></thead>
+            <tbody>
+              <tr><td><span class="pill wait">Scheduled</span></td><td>ตรวจพบเหตุการณ์แล้ว กำลังรอถึงวันที่กำหนด (delay)</td></tr>
+              <tr><td><span class="pill ok">Done</span></td><td>ดำเนินการเสร็จแล้ว (ออกคูปอง / เพิ่มเข้าแคมเปญสำเร็จ)</td></tr>
+              <tr><td><span class="pill off">Skipped</span></td><td>พยายามแล้วแต่ไม่ผ่านเงื่อนไข (เช่น รับสิทธิ์ครบโควต้าปีนี้ไปแล้ว)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figure class="shot"><img src="assets/cdpcm-automation-log.png" alt="หน้าจอ Automation Log"></figure>
+        <div class="callout note">
+          <span class="tag">ตารางนี้จะเริ่มมีข้อมูลหลัง cron รันจริงครั้งแรก</span>
+          <p>Recurring รันทุกวันที่ 1 ของเดือน, Event-based รันทุกวัน — ถ้าเพิ่งสร้าง rule จะยังไม่เห็นแถวจนกว่าจะถึงรอบ cron ถัดไป</p>
+        </div>
+      </section>
+
+      <footer class="done">
+        <span>CDP-CM · <code>mx_campaign</code> + <code>mbx_frontend</code> + <code>mx_automated_journey</code></span>
+        <span>อ้างอิงจากการ build+verify จริงบน production (odoo19-mbxai) — 2026-07-23</span>
+      </footer>
+
+    </div>
+  </main>
+</div>
+<script>
+  (function () {
+    var links = Array.prototype.slice.call(document.querySelectorAll('#sidenav a'));
+    var sections = links.map(function (a) {
+      return document.querySelector(a.getAttribute('href'));
+    });
+    function onScroll() {
+      var pos = window.scrollY + 140;
+      var activeIdx = 0;
+      sections.forEach(function (sec, i) {
+        if (sec && sec.offsetTop <= pos) activeIdx = i;
+      });
+      links.forEach(function (a, i) {
+        a.classList.toggle('active', i === activeIdx);
+      });
+    }
+    document.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+</script>
+</body>
+</html>
