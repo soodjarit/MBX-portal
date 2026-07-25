@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>7 ประเภทแคมเปญ — สร้างทีละ Step | CDP-CM</title>
+<style>
+  :root{
+    --charcoal:#1E2A28;
+    --charcoal-dark:#10140F;
+    --copper:#C1501E;
+    --copper-dark:#8F3A12;
+    --teal:#2A6B60;
+    --stone:#E7E9E1;
+    --card:#F0F1EB;
+    --white:#FFFFFF;
+    --text:#1E2A28;
+    --muted:#52625D;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#c9cdd0;font-family:Calibri,Arial,sans-serif;color:var(--text);}
+  #stage-wrap{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  #stage{position:relative;width:1280px;height:720px;background:var(--white);box-shadow:0 10px 40px rgba(0,0,0,.35);flex-shrink:0;}
+  .slide{position:absolute;top:0;left:0;width:1280px;height:720px;padding:56px 64px;display:none;flex-direction:column;overflow:hidden;background:var(--white);}
+  .slide.active{display:flex;}
+  .slide.dark{background:var(--charcoal-dark);color:var(--stone);}
+
+  .eyebrow{font-size:15px;letter-spacing:2px;text-transform:uppercase;color:var(--copper);font-weight:700;margin-bottom:8px;}
+  .dark .eyebrow{color:#E2A06F;}
+  h1.title{font-size:40px;margin:0 0 6px 0;color:var(--charcoal);font-weight:700;font-family:Cambria,serif;}
+  .dark h1.title{color:var(--white);}
+  h2.slide-title{font-size:28px;margin:0 0 16px 0;color:var(--charcoal);font-weight:700;font-family:Cambria,serif;text-wrap:balance;}
+  .subtitle{font-size:18px;color:var(--muted);margin-bottom:0;}
+  .dark .subtitle{color:#B9C2C8;}
+
+  /* Title slide */
+  #slide-0{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;}
+  #slide-0 .big-title{font-size:52px;font-family:Cambria,serif;font-weight:700;color:var(--white);margin:0 0 18px 0;line-height:1.25;}
+  #slide-0 .big-sub{font-size:20px;color:#CBD3D8;max-width:840px;line-height:1.55;}
+  #slide-0 .stamp{position:absolute;bottom:56px;left:64px;font-size:14px;color:#9AA6AC;letter-spacing:1px;}
+  #slide-0 .stone-badge{position:absolute;top:56px;right:64px;width:90px;height:90px;border-radius:50%;background:var(--copper);display:flex;align-items:center;justify-content:center;font-size:30px;color:white;font-weight:700;font-family:Cambria,serif;}
+
+  /* Case box */
+  .case-box{background:var(--card);border-radius:16px;padding:18px 24px;margin-bottom:14px;display:flex;gap:16px;align-items:flex-start;}
+  .case-icon{flex-shrink:0;width:42px;height:42px;border-radius:50%;background:var(--copper);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;font-family:Cambria,serif;}
+  .case-text-label{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--copper-dark);font-weight:700;margin-bottom:3px;}
+  .case-text{font-size:14.5px;line-height:1.46;color:var(--text);}
+
+  /* Flow bar */
+  .flow-bar{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin-bottom:14px;}
+  .flow-chip{background:var(--charcoal);color:#fff;font-size:12px;padding:7px 13px;border-radius:20px;white-space:nowrap;font-weight:600;}
+  .flow-arrow{color:var(--copper);font-size:15px;margin:0 6px;font-weight:700;}
+
+  /* Body two-col */
+  .two-col{display:flex;gap:28px;align-items:flex-start;}
+  .two-col:has(.shot-wrap){align-items:stretch;flex:1;min-height:0;}
+  .col-left{flex:1;}
+  .col-right{flex:1;display:flex;flex-direction:column;gap:12px;justify-content:center;min-height:0;}
+  .col-right .shot-wrap{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;}
+  .col-right .shot{flex:1;min-height:0;object-fit:contain;}
+
+  .step-list{list-style:none;margin:0;padding:0;}
+  .step-list li{display:flex;gap:12px;margin-bottom:9px;align-items:flex-start;}
+  .step-num{flex-shrink:0;width:25px;height:25px;border-radius:50%;background:var(--copper);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .step-text{font-size:13.5px;line-height:1.42;padding-top:2px;}
+
+  .shot{border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.18);width:100%;display:block;object-fit:cover;background:#eee;cursor:zoom-in;}
+  .shot-cap{font-size:11.5px;color:var(--muted);margin-top:5px;text-align:center;}
+  .shot-wrap{text-align:center;}
+
+  .note-box{background:#FBEEE5;border-radius:12px;padding:12px 16px;font-size:12.5px;line-height:1.42;color:#6B3A1F;margin-top:6px;}
+  .note-box b{color:var(--copper-dark);}
+
+  .data-table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  .data-table th{text-align:left;padding:7px 9px;background:var(--card);color:var(--copper-dark);font-size:10.5px;letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--stone);}
+  .data-table td{padding:7px 9px;border-bottom:1px solid var(--stone);vertical-align:top;}
+  .data-table tr:last-child td{border-bottom:none;}
+  .pill-ok{display:inline-block;font-size:10.5px;font-weight:700;color:#fff;background:var(--teal);padding:3px 9px;border-radius:99px;}
+
+  .type-pill{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;padding:5px 14px 6px;border-radius:99px;font-weight:700;color:#fff;background:var(--copper);margin-bottom:10px;}
+
+  .trio-row{display:flex;gap:14px;margin-top:6px;}
+  .trio-card{flex:1;background:var(--card);border-radius:12px;padding:14px 16px;}
+  .trio-card .tc-label{font-size:11px;letter-spacing:.5px;text-transform:uppercase;color:var(--copper-dark);font-weight:700;margin-bottom:5px;}
+  .trio-card .tc-body{font-size:12.5px;line-height:1.4;color:var(--text);}
+
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  .kpi-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px 16px;}
+  .kpi-label{font-size:11px;color:#A9B4BC;margin-bottom:6px;}
+  .kpi-value{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:#fff;}
+  .kpi-value small{font-size:14px;font-weight:400;color:#B9C2C8;margin-left:2px;}
+
+  .footer-tag{position:absolute;bottom:24px;left:64px;font-size:12px;color:var(--muted);letter-spacing:.5px;}
+  .page-num{position:absolute;bottom:24px;right:64px;font-size:12px;color:var(--muted);}
+
+  /* nav */
+  #nav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;z-index:50;background:rgba(0,0,0,.55);padding:8px 16px;border-radius:24px;}
+  #nav button{background:var(--copper);color:#fff;border:none;border-radius:50%;width:34px;height:34px;font-size:16px;cursor:pointer;}
+  #nav button:hover{background:var(--copper-dark);}
+  #nav span{color:#fff;font-size:13px;min-width:50px;text-align:center;}
+
+  #lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center;padding:50px;cursor:zoom-out;}
+  #lightbox.active{display:flex;}
+  #lightbox img{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 10px 50px rgba(0,0,0,.6);}
+
+  @media print{
+    #nav{display:none;}
+    #stage-wrap{width:auto;height:auto;overflow:visible;background:none;}
+    #stage{box-shadow:none;}
+    .slide{position:relative;display:block !important;page-break-after:always;}
+  }
+</style>
+</head>
+<body>
+<div id="stage-wrap"><div id="stage">
+
+  <!-- SLIDE 0: Title -->
+  <section class="slide dark active" id="slide-0">
+    <div class="stone-badge">CC</div>
+    <div class="eyebrow">MBX Group · Odoo 19 · Campaign &amp; Data Platform</div>
+    <div class="big-title">7 ประเภทแคมเปญ<br>สร้างทีละ Step</div>
+    <div class="big-sub">ตั้งแต่ Welcome ถึง Top Spender — วิธีเลือก Target ที่ต่างกันของแต่ละแบบ พร้อมตัวอย่างจริงจากแคมเปญที่รันอยู่ในระบบตอนนี้</div>
+    <div class="stamp">CDP-CM · mx_campaign v19.0.1.0.7 · ข้อมูลจริงจาก production (odoo19-mbxai) ณ วันที่จัดทำ</div>
+  </section>
+
+  <!-- SLIDE 1: Overview -->
+  <section class="slide" id="slide-1">
+    <div class="eyebrow">ภาพรวม · ก่อนเริ่มสร้างแคมเปญไหนก็ตาม</div>
+    <h2 class="slide-title">4 ขั้นตอนพื้นฐาน — ต่างกันแค่ขั้นตอนที่ 2</h2>
+    <div class="flow-bar">
+      <span class="flow-chip">1. New Campaign</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">2. Add Targets (ต่างกันตามประเภท)</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">3. ตั้ง Reward Restrict-to-Campaign</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">4. กด Invite</span>
+    </div>
+    <table class="data-table">
+      <tr><th>#</th><th>ประเภท</th><th>สถานะ</th><th>วิธี Target หลัก</th></tr>
+      <tr><td>1</td><td>Welcome (สมาชิกใหม่)</td><td><span class="pill-ok">พร้อมใช้</span></td><td>Segment Filter ตามวันที่สมัคร</td></tr>
+      <tr><td>2</td><td>Birthday</td><td><span class="pill-ok">พร้อมใช้</span></td><td>Segment Filter / Automated Journey</td></tr>
+      <tr><td>3</td><td>Tier (ระดับสมาชิก)</td><td><span class="pill-ok">พร้อมใช้</span></td><td>Segment Filter ตาม Pricelist Level</td></tr>
+      <tr><td>4</td><td>Personalize</td><td><span class="pill-ok">พร้อมใช้</span></td><td>Select Customers Manually</td></tr>
+      <tr><td>5</td><td>Inactive Member</td><td><span class="pill-ok">พร้อมใช้</span></td><td>Segment สำเร็จรูป "Inactive Member"</td></tr>
+      <tr><td>6</td><td>Active Member</td><td><span class="pill-ok">พร้อมใช้</span></td><td>Segment สำเร็จรูป "Active Member"</td></tr>
+      <tr><td>7</td><td>Top Spender</td><td><span class="pill-ok">พร้อมใช้</span></td><td>Segment สำเร็จรูป "Top Spender" — Top 50</td></tr>
+    </table>
+    <div class="note-box"><b>Add Targets มี 3 โหมดให้เลือกเสมอ:</b> Select Customers Manually (เลือกทีละคน) / From Segment - Domain Filter (กรองด้วยเงื่อนไข) / From CRM Leads (ดึงจาก Lead) — ถ้าเพิ่มเกิน 2,000 คนครั้งเดียว ระบบคิวเป็น Background Import Job ให้อัตโนมัติ</div>
+  </section>
+
+  <!-- SLIDE 2: Type 1 Welcome -->
+  <section class="slide" id="slide-2">
+    <div class="type-pill">ประเภท 1 / 7</div>
+    <div class="eyebrow">Welcome Campaign · สมาชิกใหม่</div>
+    <h2 class="slide-title">Segment Filter ตามวันที่สมัคร</h2>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text">เมนู Configuration → Customer Segments → New</span></li>
+          <li><span class="step-num">2</span><span class="step-text">ตั้ง Domain: <code>Membership Joined At</code> มากกว่าหรือเท่ากับ N วันที่แล้ว (field จริง: <code>mbx_membership_joined_at</code>)</span></li>
+          <li><span class="step-num">3</span><span class="step-text">กลับไปแคมเปญ → Add Targets → From Segment → เลือก segment ที่เพิ่งสร้าง</span></li>
+        </ul>
+        <div class="note-box"><b>ข้อควรระวัง:</b> ฝั่ง Reward (MXP) มีเงื่อนไขซ้อนอีกชั้น — Privilege Condition = "New Member" — ต้องตั้งจำนวนวันให้ตรงกันทั้ง 2 ฝั่ง ไม่งั้น target list จะกว้าง/แคบกว่าเงื่อนไขจริงที่ reward เช็คตอนลูกค้ากดรับ</div>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-segment-domain-filter.png"><div class="shot-cap">Customer Segment — ตั้ง Domain Filter</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: Type 2 Birthday -->
+  <section class="slide" id="slide-3">
+    <div class="type-pill">ประเภท 2 / 7</div>
+    <div class="eyebrow">Birthday Campaign</div>
+    <h2 class="slide-title">Segment Filter — หรือให้ระบบส่งเองทุกเดือนด้วย Automated Journey</h2>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text">Segment Filter — Domain: <code>Birth Date</code> เดือนตรงกับเดือนปัจจุบัน</span></li>
+          <li><span class="step-num">2</span><span class="step-text">Reward ฝั่ง MXP มี Privilege Condition = "Birthday Month" เช็คซ้ำอัตโนมัติอยู่แล้วตอนลูกค้ากดรับ — campaign segment แค่เลือกกลุ่มเพื่อยิง Invite</span></li>
+        </ul>
+        <div class="note-box"><b>ตัวอย่างจริงในระบบ:</b> "วันเฉลิมพระชนมพรรษาสมเด็จพระราชินี — Golden Perk" (ธีมวันเกิด) — claim rate <b>67.3%</b>, usage rate <b>64.9%</b> — สูงกว่าค่าเฉลี่ยทั้งระบบ (48.4%/51.7%) เพราะเป็นแคมเปญกลุ่มสมาชิก loyalty ที่ engagement สูงอยู่แล้ว</div>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-automated-journey-recurring-form.png"><div class="shot-cap">ทางเลือก: Automated Journey Rule แบบ Recurring — ไม่ต้องกด Add Targets มือทุกเดือน</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: Type 3 Tier -->
+  <section class="slide" id="slide-4">
+    <div class="type-pill">ประเภท 3 / 7</div>
+    <div class="eyebrow">Tier Campaign · ระดับสมาชิก</div>
+    <h2 class="slide-title">Segment Filter ตาม Pricelist Level</h2>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text">Domain: <code>property_product_pricelist</code> → <code>mbx_level</code> เท่ากับ level ที่ต้องการ</span></li>
+          <li><span class="step-num">2</span><span class="step-text">ระดับสมาชิกผูกอยู่กับ Pricelist ที่ partner แต่ละคนถูก assign ไว้ — เปลี่ยน level ได้จากหน้า partner โดยตรง</span></li>
+          <li><span class="step-num">3</span><span class="step-text">ใช้ทำโปรโมชั่นเฉพาะระดับ เช่น "Level 8-10 รับสิทธิ์พิเศษ"</span></li>
+        </ul>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-segment-domain-filter.png"><div class="shot-cap">Segment domain filter — เปลี่ยนแค่เงื่อนไขจาก type อื่น</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: Type 4 Personalize -->
+  <section class="slide" id="slide-5">
+    <div class="type-pill">ประเภท 4 / 7</div>
+    <div class="eyebrow">Personalize Campaign</div>
+    <h2 class="slide-title">Select Customers Manually — ไม่มีกฎตายตัว เลือกทีละคน</h2>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text">Add Targets → เลือกโหมด <b>Select Customers Manually</b></span></li>
+          <li><span class="step-num">2</span><span class="step-text">เลือกลูกค้าทีละคน/กลุ่มเล็กด้วยมือ — เหมาะกับแคมเปญเฉพาะกิจที่ไม่มีเงื่อนไขระบุเป็นกฎตายตัวได้ (เช่น VIP เฉพาะราย)</span></li>
+        </ul>
+        <div class="note-box"><b>ตัวอย่างจริงในระบบ:</b> "VIP Member Refer-a-Friend" — สร้างด้วยการเลือกลูกค้ามือแบบนี้ — claim rate <b>35.6%</b>, usage rate <b>31.2%</b> (active)</div>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-add-targets-wizard.png"><div class="shot-cap">Add Targets wizard — โหมด Select Customers Manually</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: Types 5-7 trio -->
+  <section class="slide" id="slide-6">
+    <div class="type-pill">ประเภท 5-7 / 7</div>
+    <div class="eyebrow">Inactive / Active / Top Spender — กลไกเดียวกันหมด</div>
+    <h2 class="slide-title">Segment สำเร็จรูป 3 แบบ — เลือกจาก Dropdown ไม่ต้องเขียน Domain เอง</h2>
+    <div class="case-box">
+      <div class="case-icon">i</div>
+      <div>
+        <div class="case-text-label">เบื้องหลัง</div>
+        <div class="case-text">ระบบมี field ใหม่บน <code>res.partner</code> — Last Order Date และ Purchase Status คำนวณจาก confirmed sale order อัตโนมัติทุกคืนผ่าน cron "Campaign: Refresh Customer Purchase Stats"</div>
+      </div>
+    </div>
+    <div class="trio-row">
+      <div class="trio-card">
+        <div class="tc-label">5. Inactive Member</div>
+        <div class="tc-body">Segment สำเร็จรูป "Inactive Member (No Order in 90+ Days)" — ครอบคลุมทั้งซื้อครั้งสุดท้ายเกิน 90 วัน และไม่เคยซื้อเลย</div>
+      </div>
+      <div class="trio-card">
+        <div class="tc-label">6. Active Member</div>
+        <div class="tc-body">Segment สำเร็จรูป "Active Member (Last Order ≤ 90 Days)" — ใช้ field/cron ชุดเดียวกับ Inactive Member</div>
+      </div>
+      <div class="trio-card">
+        <div class="tc-label">7. Top Spender</div>
+        <div class="tc-body">Segment สำเร็จรูป "Top Spender (Last 90 Days)" — เป็นการจัดอันดับ มี "Sort By" (<code>mx_spend_90d desc</code>) + "Limit" (ตั้งไว้ 50) ปรับเป็น Top 100/Top 20 แก้ที่ Limit ได้ตรงๆ</div>
+      </div>
+    </div>
+    <div class="note-box"><b>ปรับ window 90 วันได้จากซอร์สโค้ดเท่านั้น:</b> ตัวเลข "90 วัน" เป็นค่าคงที่ในโค้ด (<code>PURCHASE_ACTIVE_WINDOW_DAYS</code> ใน <code>res_partner.py</code>) เปลี่ยนได้แต่ต้องแก้โค้ด+อัปเกรดโมดูลใหม่ ไม่ใช่ค่าที่ปรับได้จากหน้าจอ</div>
+  </section>
+
+  <!-- SLIDE 7: Reward restrict + Invite -->
+  <section class="slide" id="slide-7">
+    <div class="eyebrow">ขั้นตอนที่ 3-4 · เหมือนกันทุกประเภท</div>
+    <h2 class="slide-title">ผูก Reward กับแคมเปญ แล้วกด Invite</h2>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text">Sales → Loyalty Programs → เปิด Reward → tab MBX Membership → กลุ่ม "Restrict to Campaign(s)" → เลือกแคมเปญนี้</span></li>
+          <li><span class="step-num">2</span><span class="step-text">กลับมาที่แคมเปญ → tab Targets → เลือกแถว (หรือทั้งหมด) → ปุ่ม Invite</span></li>
+          <li><span class="step-num">3</span><span class="step-text">ระบบออกคูปองให้ทันทีถ้าลูกค้าผ่านเงื่อนไข — target เปลี่ยนเป็น Responded อัตโนมัติ</span></li>
+        </ul>
+        <div class="note-box"><b>Bug พบ+แก้แล้ว:</b> loyalty.program ทุกตัว default ผูก Company เป็นบริษัทที่ user active อยู่ตอนสร้าง (ไม่มี UI เตือน) — ถ้าเผลอปล่อยไว้ โปรแกรมจะมองไม่เห็นที่ POS บริษัทอื่นเลย ต้องเคลียร์ field Company ให้ว่างเปล่า (global) เสมอทุกครั้งที่สร้าง Reward ใหม่ที่ใช้ร่วมกับ CDP-CM</div>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-reward-restrict-campaign.png"><div class="shot-cap">ตั้งค่า Reward ผูกกับ Campaign</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8: Real dashboard proof -->
+  <section class="slide dark" id="slide-8">
+    <div class="eyebrow">ตัวอย่างจริงในระบบตอนนี้ · Dashboard</div>
+    <h2 class="slide-title" style="color:#fff;">20 แคมเปญ รวม Revenue เกือบ 840,000 บาท</h2>
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-label">แคมเปญทั้งหมด</div><div class="kpi-value">20</div></div>
+      <div class="kpi-card"><div class="kpi-label">Revenue รวม</div><div class="kpi-value">839<small>K฿</small></div></div>
+      <div class="kpi-card"><div class="kpi-label">Claim Rate เฉลี่ย</div><div class="kpi-value">48.4<small>%</small></div></div>
+      <div class="kpi-card"><div class="kpi-label">Usage Rate เฉลี่ย</div><div class="kpi-value">51.7<small>%</small></div></div>
+    </div>
+    <div class="two-col" style="margin-top:18px;">
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-dashboard-kpi.png"><div class="shot-cap">Dashboard KPI จริง พร้อม company filter</div></div>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-dashboard-revenue-vs-total-sales.png"><div class="shot-cap">Revenue จากแคมเปญ เทียบยอดขายรวมทั้งบริษัท</div></div>
+      </div>
+    </div>
+    <div class="note-box" style="background:rgba(255,255,255,.07);border-left:none;color:#DDE3E0;margin-top:14px;"><b>Pattern ที่เห็นจริงจาก 10 แคมเปญตัวอย่างล่าสุด:</b> claim rate กระจาย 16.7%-72.0% — แคมเปญกลุ่มสมาชิก loyalty (Women's Day, Queen's Birthday) claim สูง 67-72% ส่วนกลุ่มลูกค้าทั่วไปทาง email/SMS (Valentine, Songkran) claim แค่ 16-37%</div>
+  </section>
+
+  <!-- SLIDE 9: Summary -->
+  <section class="slide dark" id="slide-9">
+    <div class="eyebrow">สรุปภาพรวม</div>
+    <h2 class="slide-title" style="color:#fff;">เลือกประเภทให้ตรงเป้าหมาย ที่เหลือ 3 ขั้นตอนเหมือนกันหมด</h2>
+    <div class="flow-bar" style="margin-bottom:20px;">
+      <span class="flow-chip" style="background:var(--copper);">เลือกประเภท 1-7</span><span class="flow-arrow">→</span>
+      <span class="flow-chip" style="background:var(--copper);">Add Targets</span><span class="flow-arrow">→</span>
+      <span class="flow-chip" style="background:var(--copper);">Reward Restrict-to-Campaign</span><span class="flow-arrow">→</span>
+      <span class="flow-chip" style="background:var(--copper);">Invite</span>
+    </div>
+    <table class="data-table" style="background:rgba(255,255,255,.04);">
+      <tr><th style="background:rgba(255,255,255,.08);color:#E2A06F;">ต้องการอะไร</th><th style="background:rgba(255,255,255,.08);color:#E2A06F;">ใช้ประเภทไหน</th></tr>
+      <tr style="color:#DDE3E0;"><td>ต้อนรับสมาชิกใหม่</td><td>1. Welcome</td></tr>
+      <tr style="color:#DDE3E0;"><td>อวยพรวันเกิด (จะให้อัตโนมัติก็ได้)</td><td>2. Birthday</td></tr>
+      <tr style="color:#DDE3E0;"><td>สิทธิพิเศษเฉพาะระดับสมาชิก</td><td>3. Tier</td></tr>
+      <tr style="color:#DDE3E0;"><td>กลุ่มเฉพาะกิจ ไม่มีกฎตายตัว</td><td>4. Personalize</td></tr>
+      <tr style="color:#DDE3E0;"><td>ดึงลูกค้าเงียบหายกลับมา</td><td>5. Inactive Member</td></tr>
+      <tr style="color:#DDE3E0;"><td>รักษาฐานลูกค้าที่ยังซื้ออยู่</td><td>6. Active Member</td></tr>
+      <tr style="color:#DDE3E0;"><td>ดูแลลูกค้าจ่ายหนักเป็นพิเศษ</td><td>7. Top Spender</td></tr>
+    </table>
+    <div style="margin-top:20px;font-size:14.5px;color:#B9C2C8;">รายละเอียดเต็ม + screenshot ทุกขั้นตอน: คู่มือฉบับเต็ม CDP-CM บทที่ 02</div>
+  </section>
+
+</div></div>
+
+<div id="nav">
+  <button onclick="go(-1)" aria-label="Previous slide">‹</button>
+  <span id="pagecount">1 / 10</span>
+  <button onclick="go(1)" aria-label="Next slide">›</button>
+</div>
+
+<div id="lightbox" onclick="closeLightbox()"><img id="lightbox-img" src=""></div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let idx = 0;
+  function render(){
+    slides.forEach((s,i)=>s.classList.toggle('active', i===idx));
+    document.getElementById('pagecount').textContent = (idx+1)+' / '+slides.length;
+  }
+  function go(d){
+    idx = Math.min(slides.length-1, Math.max(0, idx+d));
+    render();
+  }
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight'||e.key===' ') go(1);
+    if(e.key==='ArrowLeft') go(-1);
+  });
+  document.querySelectorAll('.shot').forEach(img=>{
+    img.addEventListener('click', ()=>{
+      document.getElementById('lightbox-img').src = img.src;
+      document.getElementById('lightbox').classList.add('active');
+    });
+  });
+  function closeLightbox(){
+    document.getElementById('lightbox').classList.remove('active');
+  }
+  document.addEventListener('keydown', e=>{
+    if(e.key==='Escape') closeLightbox();
+  });
+  function scaleStage(){
+    const wrap = document.getElementById('stage-wrap');
+    const stage = document.getElementById('stage');
+    const scale = Math.min(wrap.clientWidth/1280, wrap.clientHeight/720);
+    stage.style.transform = 'scale('+scale+')';
+  }
+  window.addEventListener('resize', scaleStage);
+  scaleStage();
+  render();
+</script>
+</body>
+</html>
