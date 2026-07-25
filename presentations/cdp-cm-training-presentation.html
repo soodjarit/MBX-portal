@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>CDP-CM — คู่มืออบรมการใช้งาน</title>
+<style>
+  :root{
+    --charcoal:#1E2A28;
+    --charcoal-dark:#10140F;
+    --copper:#C1501E;
+    --copper-dark:#8F3A12;
+    --teal:#2A6B60;
+    --stone:#E7E9E1;
+    --card:#F0F1EB;
+    --white:#FFFFFF;
+    --text:#1E2A28;
+    --muted:#52625D;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#c9cdd0;font-family:Calibri,Arial,sans-serif;color:var(--text);}
+  #stage-wrap{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  #stage{position:relative;width:1280px;height:720px;background:var(--white);box-shadow:0 10px 40px rgba(0,0,0,.35);flex-shrink:0;}
+  .slide{position:absolute;top:0;left:0;width:1280px;height:720px;padding:56px 64px;display:none;flex-direction:column;overflow:hidden;background:var(--white);}
+  .slide.active{display:flex;}
+  .slide.dark{background:var(--charcoal-dark);color:var(--stone);}
+
+  .eyebrow{font-size:15px;letter-spacing:2px;text-transform:uppercase;color:var(--copper);font-weight:700;margin-bottom:8px;}
+  .dark .eyebrow{color:#E2A06F;}
+  h1.title{font-size:40px;margin:0 0 6px 0;color:var(--charcoal);font-weight:700;font-family:Cambria,serif;}
+  .dark h1.title{color:var(--white);}
+  h2.slide-title{font-size:30px;margin:0 0 20px 0;color:var(--charcoal);font-weight:700;font-family:Cambria,serif;}
+  .subtitle{font-size:18px;color:var(--muted);margin-bottom:0;}
+  .dark .subtitle{color:#B9C2C8;}
+
+  /* Title slide */
+  #slide-0{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;}
+  #slide-0 .big-title{font-size:54px;font-family:Cambria,serif;font-weight:700;color:var(--white);margin:0 0 18px 0;line-height:1.25;}
+  #slide-0 .big-sub{font-size:21px;color:#CBD3D8;max-width:840px;line-height:1.55;}
+  #slide-0 .stamp{position:absolute;bottom:56px;left:64px;font-size:14px;color:#9AA6AC;letter-spacing:1px;}
+  #slide-0 .stone-badge{position:absolute;top:56px;right:64px;width:90px;height:90px;border-radius:50%;background:var(--copper);display:flex;align-items:center;justify-content:center;font-size:30px;color:white;font-weight:700;font-family:Cambria,serif;}
+
+  /* Case box */
+  .case-box{background:var(--card);border-radius:16px;padding:22px 28px;margin-bottom:20px;display:flex;gap:20px;align-items:flex-start;}
+  .case-icon{flex-shrink:0;width:48px;height:48px;border-radius:50%;background:var(--copper);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;font-family:Cambria,serif;}
+  .case-text-label{font-size:12.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--copper-dark);font-weight:700;margin-bottom:4px;}
+  .case-text{font-size:16.5px;line-height:1.5;color:var(--text);}
+
+  /* Flow bar */
+  .flow-bar{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin-bottom:20px;}
+  .flow-chip{background:var(--charcoal);color:#fff;font-size:13px;padding:8px 15px;border-radius:20px;white-space:nowrap;font-weight:600;}
+  .flow-arrow{color:var(--copper);font-size:17px;margin:0 7px;font-weight:700;}
+
+  /* Body two-col */
+  .two-col{display:flex;gap:32px;align-items:flex-start;}
+  .two-col:has(.shot-wrap){align-items:stretch;flex:1;min-height:0;}
+  .col-left{flex:1;}
+  .col-right{flex:1;display:flex;flex-direction:column;gap:14px;justify-content:center;min-height:0;}
+  .col-right .shot-wrap{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;}
+  .col-right .shot{flex:1;min-height:0;object-fit:contain;}
+
+  .step-list{list-style:none;margin:0;padding:0;}
+  .step-list li{display:flex;gap:13px;margin-bottom:12px;align-items:flex-start;}
+  .step-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--copper);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .step-text{font-size:14.5px;line-height:1.48;padding-top:3px;}
+
+  .shot{border-radius:10px;box-shadow:0 4px 18px rgba(0,0,0,.18);width:100%;display:block;object-fit:cover;background:#eee;cursor:zoom-in;}
+  .shot-cap{font-size:12px;color:var(--muted);margin-top:6px;text-align:center;}
+  .shot-wrap{text-align:center;}
+
+  .note-box{background:#FBEEE5;border-radius:12px;padding:14px 18px;font-size:13.5px;line-height:1.48;color:#6B3A1F;margin-top:8px;}
+  .note-box b{color:var(--copper-dark);}
+
+  .hier-row{display:flex;gap:14px;margin:16px 0;}
+  .hier-card{flex:1;background:var(--card);border-radius:12px;padding:16px;text-align:center;}
+  .hier-card .hlabel{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--copper-dark);font-weight:700;margin-bottom:6px;}
+  .hier-card .hdesc{font-size:13.5px;color:var(--text);line-height:1.4;}
+  .hier-arrow{align-self:center;color:var(--copper);font-size:20px;font-weight:700;}
+
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:5px 14px 6px;border-radius:99px;font-weight:700;color:#fff;}
+  .pill.off{background:#8B978F;}
+  .pill.wait{background:var(--copper);}
+  .pill.ok{background:var(--teal);}
+  .chip-row{margin:6px 0 18px;font-size:15px;}
+  .chip-arrow{color:var(--muted);margin:0 8px;font-weight:700;}
+
+  .data-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .data-table th{text-align:left;padding:7px 10px;background:var(--card);color:var(--copper-dark);font-size:11px;letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--stone);}
+  .data-table td{padding:7px 10px;border-bottom:1px solid var(--stone);vertical-align:top;}
+  .data-table tr:last-child td{border-bottom:none;}
+
+  .result-table{width:100%;border-collapse:collapse;font-size:14.5px;}
+  .result-table td{padding:8px 0;border-bottom:1px solid #e6e2dc;}
+  .result-table td:last-child{text-align:right;}
+  .result-table tr.total td{font-weight:700;color:var(--copper-dark);border-bottom:none;padding-top:12px;}
+
+  .compare-box{flex:1;border-radius:14px;padding:20px;}
+  .compare-box.light{background:var(--card);}
+  .compare-box.dark-box{background:rgba(255,255,255,.08);}
+  .compare-box .cb-title{font-weight:700;margin-bottom:8px;}
+  .compare-box.light .cb-title{color:var(--copper-dark);}
+  .compare-box.dark-box .cb-title{color:#E2A06F;}
+  .compare-box .cb-body{font-size:14px;line-height:1.6;}
+  .compare-box.dark-box .cb-body{color:#DDE3E0;}
+
+  .footer-tag{position:absolute;bottom:24px;left:64px;font-size:12px;color:var(--muted);letter-spacing:.5px;}
+  .page-num{position:absolute;bottom:24px;right:64px;font-size:12px;color:var(--muted);}
+
+  /* nav */
+  #nav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;z-index:50;background:rgba(0,0,0,.55);padding:8px 16px;border-radius:24px;}
+  #nav button{background:var(--copper);color:#fff;border:none;border-radius:50%;width:34px;height:34px;font-size:16px;cursor:pointer;}
+  #nav button:hover{background:var(--copper-dark);}
+  #nav span{color:#fff;font-size:13px;min-width:50px;text-align:center;}
+
+  #lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center;padding:50px;cursor:zoom-out;}
+  #lightbox.active{display:flex;}
+  #lightbox img{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 10px 50px rgba(0,0,0,.6);}
+
+  @media print{
+    #nav{display:none;}
+    #stage-wrap{width:auto;height:auto;overflow:visible;background:none;}
+    #stage{box-shadow:none;}
+    .slide{position:relative;display:block !important;page-break-after:always;}
+  }
+</style>
+</head>
+<body>
+<div id="stage-wrap"><div id="stage">
+
+  <!-- SLIDE 0: Title -->
+  <section class="slide dark active" id="slide-0">
+    <div class="stone-badge">CC</div>
+    <div class="eyebrow">MBX Group · Odoo 19 · Campaign &amp; Data Platform</div>
+    <div class="big-title">CDP-CM<br>คู่มืออบรมการใช้งาน</div>
+    <div class="big-sub">ตั้งค่าแคมเปญ → ลูกค้าได้รับ/ใช้สิทธิ์จริงที่ POS → ดูผลที่ Dashboard → ตั้งระบบให้ส่งสิทธิ์ให้เองอัตโนมัติ</div>
+    <div class="stamp">CDP-CM Manual · mx_campaign + mbx_frontend + mx_automated_journey · build+verify จริงบน production 2026-07-23</div>
+  </section>
+
+  <!-- SLIDE 1: Overview -->
+  <section class="slide" id="slide-1">
+    <div class="eyebrow">ภาพรวม · Campaign &amp; Data Platform</div>
+    <h2 class="slide-title">3 ส่วนที่ต้องตั้งค่าให้เข้าคู่กัน</h2>
+    <div class="case-box">
+      <div class="case-icon">?</div>
+      <div>
+        <div class="case-text-label">โจทย์</div>
+        <div class="case-text">CDP-CM (<b>mx_campaign</b>) ทำงานกับลูกค้าทั่วไปแบบกว้าง ต่างจาก MXP (<b>mbx_frontend</b>) ที่เป็น Membership เฉพาะสมาชิก — ทั้งสองเชื่อมกันตรงจุดที่ Reward/Privilege ถูกจำกัดสิทธิ์เฉพาะคนใน Campaign Target list เท่านั้น</div>
+      </div>
+    </div>
+    <div class="hier-row">
+      <div class="hier-card"><div class="hlabel">Campaign</div><div class="hdesc">กำหนด "ใครคือกลุ่มเป้าหมาย" — เมนู Campaigns (CDP-CM)</div></div>
+      <div class="hier-arrow">→</div>
+      <div class="hier-card"><div class="hlabel">Reward / Privilege</div><div class="hdesc">กำหนด "สิทธิ์/ของรางวัล" ผูกจำกัดเฉพาะคนใน Campaign — Sales → Loyalty Programs</div></div>
+      <div class="hier-arrow">→</div>
+      <div class="hier-card"><div class="hlabel">POS</div><div class="hdesc">จุดที่ลูกค้า "ใช้สิทธิ์จริง" ที่หน้าร้าน</div></div>
+    </div>
+    <div class="flow-bar">
+      <span class="flow-chip">สร้าง Campaign</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">เพิ่ม Targets</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">ตั้ง Reward + Invite</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">ออกคูปองอัตโนมัติ</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">ลูกค้าใช้ที่ POS</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">ดูผลที่ Dashboard</span>
+    </div>
+    <div class="note-box"><b>ขอบเขต Screenshot:</b> รูปทั้งหมดในคู่มือนี้ (Backend Campaign/Reward/Segment/Dashboard/Automated Journey, หน้า /coupons ของแอพสมาชิก, หน้าจอ POS ตอน Enter Code) capture จากการทดสอบจริงทั้งหมด รวมถึงธุรกรรม POS ที่ชำระเงินจริงจนคูปองถูกใช้จริง ไม่ใช่ mockup ทั้งเล่ม</div>
+  </section>
+
+  <!-- SLIDE 2: Ch1 - Journey status -->
+  <section class="slide" id="slide-2">
+    <div class="eyebrow">บทที่ 01 · Flow รวม</div>
+    <h2 class="slide-title">สถานะ Journey เดินหน้าเรื่อยๆ ไม่ย้อนกลับ</h2>
+    <div class="chip-row">
+      <span class="pill off">Draft</span><span class="chip-arrow">→</span>
+      <span class="pill wait">Invited</span><span class="chip-arrow">→</span>
+      <span class="pill wait">Responded</span><span class="chip-arrow">→</span>
+      <span class="pill ok">Converted</span>
+      <span class="chip-arrow">(หรือ)</span><span class="pill off">Lost</span>
+    </div>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text"><b>Draft</b> — อยู่ใน target list แล้ว แต่ยังไม่ถูกเชิญ</span></li>
+          <li><span class="step-num">2</span><span class="step-text"><b>Invited</b> — เชิญแล้ว ระบบพยายามออกคูปองให้อัตโนมัติทันที</span></li>
+          <li><span class="step-num">3</span><span class="step-text"><b>Responded</b> — ลูกค้ากดรับคูปอง/สิทธิ์แล้ว (อัปเดตอัตโนมัติตอนออกคูปองสำเร็จ)</span></li>
+          <li><span class="step-num">4</span><span class="step-text"><b>Converted</b> — ลูกค้าใช้คูปองจริงแล้วที่ POS (อัปเดตอัตโนมัติผ่าน cron ทุก 60 นาที)</span></li>
+        </ul>
+        <div class="note-box"><b>ตัวเลข Sent / Opened(Claimed) / Redemptions(Converted)</b> ที่เห็นใน Dashboard และหน้า Campaign นับจากสถานะเหล่านี้โดยตรง</div>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-target-status.png"><div class="shot-cap">สถานะ target ในแคมเปญทดสอบจริง</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: Ch2 setup 1/3 -->
+  <section class="slide" id="slide-3">
+    <div class="eyebrow">บทที่ 02 · ตั้งค่า Campaign (1/3)</div>
+    <h2 class="slide-title">4 ขั้นตอนพื้นฐาน เหมือนกันทุกประเภทแคมเปญ</h2>
+    <div class="case-box">
+      <div class="case-icon">1</div>
+      <div>
+        <div class="case-text-label">สถานการณ์จริง</div>
+        <div class="case-text">ไม่ว่าจะทำแคมเปญแบบไหน ต้องผ่าน 4 ขั้นตอนนี้เสมอ — ส่วนที่ต่างกันในแต่ละประเภทคือวิธีเลือก Target เท่านั้น</div>
+      </div>
+    </div>
+    <div class="flow-bar">
+      <span class="flow-chip">New Campaign</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">Add Targets</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">ตั้ง Reward ผูกแคมเปญ</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">กด Invite</span>
+    </div>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text">เมนู Campaigns → Campaigns → New — กรอก Name, Type (ต้องมี Campaign Type อย่างน้อย 1 อันไว้ก่อน), Start/End Date</span></li>
+          <li><span class="step-num">2</span><span class="step-text">กดปุ่ม Add Targets บนฟอร์มแคมเปญ — เลือกโหมดตามประเภทแคมเปญ (ดูสไลด์ถัดไป)</span></li>
+        </ul>
+        <div class="note-box"><b>เลย์เอาต์ใหม่ (2026-07-23):</b> เดิม Budget/Goals/Funnel Performance เรียงยาวบนสุดทั้งหมด ตอนนี้ส่วนบนเหลือแค่ Campaign Details + Schedule ส่วนที่เหลือย้ายไป tab Overview คลิกเดียวเห็นครบ ไม่มีข้อมูลหาย</div>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-campaign-form-overview-tab.png"><div class="shot-cap">ฟอร์ม Campaign เลย์เอาต์ใหม่ พร้อม tab Overview</div></div>
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-add-targets-wizard.png"><div class="shot-cap">Add Targets wizard</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: Ch2 setup 2/3 -->
+  <section class="slide" id="slide-4">
+    <div class="eyebrow">บทที่ 02 · ตั้งค่า Campaign (2/3)</div>
+    <h2 class="slide-title">ผูก Reward กับแคมเปญ แล้วกด Invite</h2>
+    <div class="case-box">
+      <div class="case-icon">2</div>
+      <div>
+        <div class="case-text-label">สถานการณ์จริง</div>
+        <div class="case-text">ตั้งค่า Reward ที่เมนู Sales → Loyalty Programs → เปิด Reward → tab MBX Membership → กลุ่ม "Restrict to Campaign(s)" → เลือกแคมเปญนี้ แล้วกลับมากด Invite</div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text">Add Targets มี 3 โหมดเสมอ: Select Customers Manually / From Segment (Domain Filter) / From CRM Leads</span></li>
+          <li><span class="step-num">2</span><span class="step-text">ถ้าจำนวนลูกค้าที่เพิ่มเกิน 2,000 คนในครั้งเดียว ระบบจะคิวเป็น Background Import Job แทนการเพิ่มทันที ดูสถานะได้ที่ปุ่ม Import Jobs</span></li>
+          <li><span class="step-num">3</span><span class="step-text">กลับมาที่แคมเปญ → tab Targets → เลือกแถว (หรือทั้งหมด) → ปุ่ม Invite</span></li>
+        </ul>
+        <div class="note-box"><b>Bug พบ+แก้แล้ว 2026-07-23:</b> loyalty.program ทุกตัว default ผูก Company เป็นบริษัทที่ user active อยู่ตอนสร้าง (ไม่มี UI เตือน) — ถ้าเผลอปล่อยไว้ โปรแกรมจะมองไม่เห็นที่ POS บริษัทอื่นเลย โปรแกรม Coupon/Privilege ที่ใช้ร่วมกับ CDP-CM ต้องเคลียร์ field Company ให้ว่างเปล่า (global) เสมอ</div>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-reward-restrict-campaign.png"><div class="shot-cap">ตั้งค่า Reward ผูกกับ Campaign</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: Ch2 setup 3/3 - 7 types table -->
+  <section class="slide" id="slide-5">
+    <div class="eyebrow">บทที่ 02 · ตั้งค่า Campaign (3/3)</div>
+    <h2 class="slide-title">ครบทั้ง 7 ประเภท พร้อมใช้งานจริงแล้วทั้งหมด</h2>
+    <div class="two-col">
+      <div class="col-left">
+        <table class="data-table">
+          <tr><th>ประเภท</th><th>สถานะ</th><th>วิธี Target หลัก</th></tr>
+          <tr><td>1. Welcome (สมาชิกใหม่)</td><td>พร้อมใช้</td><td>Segment Filter ตามวันที่สมัคร</td></tr>
+          <tr><td>2. Birthday</td><td>พร้อมใช้</td><td>Segment Filter / Automated Journey</td></tr>
+          <tr><td>3. Tier (ระดับสมาชิก)</td><td>พร้อมใช้</td><td>Segment Filter ตาม Pricelist Level</td></tr>
+          <tr><td>4. Personalize</td><td>พร้อมใช้</td><td>Select Customers Manually</td></tr>
+          <tr><td>5. Inactive Member</td><td>พร้อมใช้</td><td>Segment สำเร็จรูป "Inactive Member"</td></tr>
+          <tr><td>6. Active Member</td><td>พร้อมใช้</td><td>Segment สำเร็จรูป "Active Member"</td></tr>
+          <tr><td>7. Top Spender</td><td>พร้อมใช้</td><td>Segment สำเร็จรูป "Top Spender" — Top 50</td></tr>
+        </table>
+        <div class="note-box"><b>ตัวอย่าง Welcome Campaign:</b> Segment Filter — Domain: Membership Joined At ≥ N วันที่แล้ว — ควรตั้งจำนวนวันให้ตรงกับ Privilege Condition ฝั่ง Reward เพื่อไม่ให้ target list กว้าง/แคบกว่าเงื่อนไขจริง</div>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-segment-domain-filter.png"><div class="shot-cap">Customer Segment domain filter</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: Ch3 1/3 -->
+  <section class="slide" id="slide-6">
+    <div class="eyebrow">บทที่ 03 · Customer Journey (1/3)</div>
+    <h2 class="slide-title">กด Invite ปุ๊บ ระบบออกคูปองให้ลูกค้าทันที</h2>
+    <div class="case-box">
+      <div class="case-icon">✓</div>
+      <div>
+        <div class="case-text-label">ยืนยันด้วยธุรกรรมจริงแล้ว (2026-07-23)</div>
+        <div class="case-text">ทดสอบ redeem จริงที่ MBX Café POS ครบ flow — พิมพ์โค้ด → ส่วนลดขึ้น → ชำระเงิน → คูปองถูกใช้จริง — screenshot ในบทนี้มาจากธุรกรรมจริงนี้ทั้งหมด</div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text">ทีม Marketing กด Invite → ระบบเช็คว่ามี Reward ผูก Restrict to Campaign กับแคมเปญนี้ → เช็คสิทธิ์ลูกค้า → ถ้าผ่านเงื่อนไข ออกคูปองให้ทันที → target เป็น Responded</span></li>
+          <li><span class="step-num">2</span><span class="step-text">ลูกค้าเข้าแอพสมาชิกที่หน้า /coupons — เห็นคูปองทั้งหมดที่มีสิทธิ์เป็นการ์ดแบบ grid พร้อมโค้ดคูปองเป็นตัวอักษรตรงๆ</span></li>
+        </ul>
+        <div class="note-box"><b>ถ้าลูกค้ายังไม่ผ่านเงื่อนไขตอน Invite:</b> ระบบไม่ error และไม่บล็อกการ invite — target ยังคงสถานะ Invited ตรวจสอบสาเหตุได้ที่หน้า Privilege Claims</div>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-coupons-app-list.png"><div class="shot-cap">รายการคูปองของสมาชิก (login สมาชิกทดสอบจริง)</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7: Ch3 2/3 - POS enter code -->
+  <section class="slide" id="slide-7">
+    <div class="eyebrow">บทที่ 03 · Customer Journey (2/3)</div>
+    <h2 class="slide-title">พนักงานพิมพ์โค้ดที่ POS — ยังไม่ใช่การสแกนจริง</h2>
+    <div class="case-box">
+      <div class="case-icon">3</div>
+      <div>
+        <div class="case-text-label">สถานะปัจจุบัน</div>
+        <div class="case-text">ตั้งใจให้ลูกค้ายื่นจอให้พนักงาน scan — มี Barcode Rule ฝั่ง POS รอไว้แล้ว แต่หน้า /coupons ตอนนี้แสดงโค้ดเป็นตัวอักษรเท่านั้น ใช้วิธีพนักงานอ่านโค้ดแล้วพิมพ์เองไปก่อน รอเลือกเครื่องสแกนที่จะใช้จริงหน้าร้าน</div>
+      </div>
+    </div>
+    <div class="flow-bar">
+      <span class="flow-chip">เพิ่มสินค้า+ระบุลูกค้า</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">กด "⋮" Actions</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">Enter Code</span>
+    </div>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text">เพิ่มสินค้าลงตะกร้า + ระบุลูกค้าตามปกติ แล้วกดปุ่ม "⋮" (More/Actions) มุมล่างซ้าย</span></li>
+          <li><span class="step-num">2</span><span class="step-text">กด "Enter Code" เปิดช่องกรอกโค้ด (auto-focus พิมพ์ได้ทันที)</span></li>
+        </ul>
+        <div class="note-box"><b>Barcode Rule ฝั่ง POS ทำไว้รอแล้ว:</b> รู้จักรูปแบบโค้ด MBX (PREFIX-XXXXXXXXXX) แล้ว ทันทีที่หน้า /coupons มี QR/Barcode ให้สแกนจริง ฝั่ง POS พร้อมใช้งานได้เลยไม่ต้องแก้อะไรเพิ่ม</div>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-pos-actions-menu.png"><div class="shot-cap">POS Actions menu</div></div>
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-pos-enter-code-empty.png"><div class="shot-cap">POS Enter Code ช่องว่าง</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8: Ch3 3/3 - apply + receipt -->
+  <section class="slide" id="slide-8">
+    <div class="eyebrow">บทที่ 03 · Customer Journey (3/3)</div>
+    <h2 class="slide-title">Apply โค้ด → ปิดออเดอร์ตามปกติ → ระบบอัปเดตให้เอง</h2>
+    <div class="flow-bar">
+      <span class="flow-chip">พิมพ์โค้ด + Apply</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">ส่วนลดเข้าออเดอร์</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">ปิดออเดอร์ปกติ</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">cron ทุก 60 นาที → Converted</span>
+    </div>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text">ให้ลูกค้าอ่านโค้ดตัวอักษร (หรือยื่นจอให้ดู) พนักงานพิมพ์เข้าไปตรงๆ กด Apply — ระบบจับคู่คูปองใส่ส่วนลดเข้าออเดอร์ทันที</span></li>
+          <li><span class="step-num">2</span><span class="step-text">พนักงานคิดเงินต่อตามปกติ ไม่มีขั้นตอนพิเศษเพิ่มเติม คูปองถูกใช้ (points เหลือ 0) ทันทีที่ออเดอร์เสร็จสมบูรณ์ — ใบเสร็จแสดงบรรทัดส่วนลดจากคูปองด้วย</span></li>
+          <li><span class="step-num">3</span><span class="step-text">การใช้คูปองที่ POS เกิดนอกระบบ CDP-CM โดยตรง จึงมี cron ทำงานทุก 60 นาที คอยเช็คว่าคูปองถูกใช้หรือยัง — ถ้าใช้แล้ว อัปเดต target เป็น Converted ให้อัตโนมัติ</span></li>
+        </ul>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-pos-discount-applied.png"><div class="shot-cap">ส่วนลดจากคูปองขึ้นในตะกร้า</div></div>
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-pos-receipt.png"><div class="shot-cap">ใบเสร็จหลังชำระเงินสำเร็จ</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 9: Ch4 1/2 -->
+  <section class="slide" id="slide-9">
+    <div class="eyebrow">บทที่ 04 · Dashboard (1/2)</div>
+    <h2 class="slide-title">Filter บนสุดมีผลกับทุกอย่างในหน้านี้</h2>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text"><b>Date Range</b> (Month/Quarter/Year/All) — กรองช่วงเวลาของ KPI, Revenue by Campaign, Status, Conversion by Type, Top Campaigns</span></li>
+          <li><span class="step-num">2</span><span class="step-text"><b>Company</b> (แถบ pill ด้านบน) — เลือกได้หลายบริษัทพร้อมกัน ค่าเริ่มต้น = ทุกบริษัทที่ user มีสิทธิ์เห็น</span></li>
+          <li><span class="step-num">3</span><span class="step-text"><b>KPI แถวบนสุด:</b> Active Campaigns / Budget Planned / Total Revenue / Avg ROI / Avg Conversion</span></li>
+        </ul>
+        <div class="note-box"><b>Activity Timeline (30 วันล่าสุด)</b> ไม่ผูกกับ Date Range — card นี้แสดงย้อนหลัง 30 วันเสมอ (แต่ยังกรองตาม Company filter ตามปกติ)</div>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-dashboard-kpi.png"><div class="shot-cap">Dashboard KPI พร้อม company filter</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 10: Ch4 2/2 -->
+  <section class="slide" id="slide-10">
+    <div class="eyebrow">บทที่ 04 · Dashboard (2/2)</div>
+    <h2 class="slide-title">Revenue จากแคมเปญ vs ยอดขายทั้งบริษัท — เห็นสัดส่วนจริง</h2>
+    <div class="case-box">
+      <div class="case-icon">4</div>
+      <div>
+        <div class="case-text-label">ข้อสังเกตจริงจาก Dashboard</div>
+        <div class="case-text">Revenue Trend อยู่หลักแสน ในขณะที่ยอดขายรวมทั้งบริษัทอยู่หลักล้าน — เห็นชัดว่ายอดจากแคมเปญเป็นสัดส่วนเล็กน้อยเมื่อเทียบกับยอดขายทั้งหมด</div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="col-left">
+        <table class="data-table">
+          <tr><th>ระดับ Engagement</th><th>เงื่อนไข</th></tr>
+          <tr><td>Champion</td><td>Converted ≥ 2 ครั้ง และติดต่อล่าสุดภายใน 30 วัน</td></tr>
+          <tr><td>Hot</td><td>Converted ≥ 1 ครั้ง และติดต่อล่าสุดภายใน 60 วัน</td></tr>
+          <tr><td>Warm</td><td>เคยอยู่ในแคมเปญอย่างน้อย 1 ครั้ง ติดต่อล่าสุดภายใน 90 วัน</td></tr>
+          <tr><td>Cold</td><td>นอกเหนือจากเงื่อนไขข้างต้น</td></tr>
+        </table>
+        <div class="note-box"><b>เส้น "Revenue"</b> นับเฉพาะยอดขายที่ผูกกับแคมเปญ (mx_campaign_id) และยืนยันแล้วเท่านั้น — ยอดที่ไม่ได้มาจากแคมเปญไหนเลยจะไม่รวมอยู่ในเส้นนี้</div>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-dashboard-revenue-vs-total-sales.png"><div class="shot-cap">กราฟยอดขายรายเดือนแยกบริษัท เทียบกับ Revenue Trend</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 11: Ch5 overview -->
+  <section class="slide" id="slide-11">
+    <div class="eyebrow">บทที่ 05 ใหม่ · 2026-07-23 · Automated Journey</div>
+    <h2 class="slide-title">ตั้งกฎครั้งเดียว ระบบทำงานให้เองต่อเนื่อง</h2>
+    <div class="case-box">
+      <div class="case-icon">5</div>
+      <div>
+        <div class="case-text-label">โจทย์</div>
+        <div class="case-text">วันเกิดลูกค้า → ได้คูปองวันเกิดอัตโนมัติทุกเดือน / ใช้คูปอง A → ได้ B ต่อ / ซื้อสินค้า A → ได้คูปอง X — ไม่ต้องกลับมากด Add Targets เองทุกครั้ง</div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="col-left compare-box light">
+        <div class="cb-title">Recurring — วันเกิด</div>
+        <div class="cb-body">Cron รายเดือน (วันที่ 1) → หาลูกค้าเดือนเกิดตรงเดือนนี้ → เช็คสิทธิ์ผ่านระบบ Privilege เดิม (cycle 1 ครั้ง/ปี) → Auto-confirm Privilege Claim ออกคูปองให้ทันที<br><b>ไม่ผ่าน Campaign/Campaign Target เลย</b></div>
+      </div>
+      <div class="col-right compare-box light">
+        <div class="cb-title">Event-based — Coupon Used / Product Purchased</div>
+        <div class="cb-body">Cron รายวัน → สแกนหาเหตุการณ์ใหม่ (หลังวันสร้าง rule เท่านั้น) → หน่วงตามวันที่ตั้ง (ถ้ามี) → เพิ่มเข้า Campaign Target + Invite ให้อัตโนมัติ → Reward ที่ผูกแคมเปญออกคูปองให้<br><b>ผ่าน Campaign Target เหมือน flow ปกติ</b></div>
+      </div>
+    </div>
+    <div class="note-box"><b>Rule ใหม่ไม่ย้อนหลัง:</b> Event-based rule นับเฉพาะเหตุการณ์ที่เกิดหลังจากวันที่สร้าง rule เท่านั้น ป้องกันส่งคูปองจำนวนมากผิดคาดตอนเปิดใช้งานครั้งแรก</div>
+  </section>
+
+  <!-- SLIDE 12: Ch5 setup recurring -->
+  <section class="slide" id="slide-12">
+    <div class="eyebrow">บทที่ 05 · ตั้งค่า Automated Journey (1/2)</div>
+    <h2 class="slide-title">ตั้งกฎ Recurring สำหรับคูปองวันเกิด</h2>
+    <div class="flow-bar">
+      <span class="flow-chip">Configuration → Automated Journey Rules → New</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">Trigger Type = Recurring</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">เลือก Privilege Reward to Auto-Claim</span>
+    </div>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text">เลือก Trigger Type = Recurring</span></li>
+          <li><span class="step-num">2</span><span class="step-text">เลือก Privilege Reward to Auto-Claim — ต้องเป็น Reward ที่เปิด "Enable Privilege Claim" ไว้แล้ว และตั้ง Privilege Condition = Birthday Month</span></li>
+          <li><span class="step-num">3</span><span class="step-text">ระบบใช้ Limit Period ของ reward นั้นเป็นตัวกันไม่ให้ออกซ้ำ (ปกติตั้ง "Per Year")</span></li>
+        </ul>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-automated-journey-recurring-form.png"><div class="shot-cap">ฟอร์ม Automated Journey Rule แบบ Recurring</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 13: Ch5 setup event-based -->
+  <section class="slide" id="slide-13">
+    <div class="eyebrow">บทที่ 05 · ตั้งค่า Automated Journey (2/2)</div>
+    <h2 class="slide-title">ตั้งกฎ Event-based สำหรับ Coupon Used / Product Purchased</h2>
+    <div class="flow-bar">
+      <span class="flow-chip">Trigger Type = Event-based</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">เลือก Target Campaign</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">เลือก Event Source</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">ตั้ง Delay (days)</span>
+    </div>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text">เลือก Target Campaign — แคมเปญที่จะเพิ่มลูกค้าเข้าไปเมื่อเข้าเงื่อนไข (ต้องมี Reward ผูก "Restrict to Campaign" ไว้แล้ว)</span></li>
+          <li><span class="step-num">2</span><span class="step-text">เลือก Event Source: Coupon Used → เลือก Source Coupon Program, หรือ Product Purchased → เลือก Source Product</span></li>
+          <li><span class="step-num">3</span><span class="step-text">ตั้ง Delay (days) — 0 = ส่งทันทีที่ตรวจพบ, ใส่ตัวเลข = หน่วงกี่วันก่อนเพิ่มเข้าแคมเปญ</span></li>
+        </ul>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-automated-journey-event-form.png"><div class="shot-cap">ฟอร์ม Automated Journey Rule แบบ Event-based</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 14: Ch5 Automation Log -->
+  <section class="slide" id="slide-14">
+    <div class="eyebrow">บทที่ 05 · ติดตามผล</div>
+    <h2 class="slide-title">Automation Log — ดูว่ากฎไหนทำงานกับใครเมื่อไหร่</h2>
+    <div class="two-col">
+      <div class="col-left">
+        <table class="data-table">
+          <tr><th>สถานะ</th><th>ความหมาย</th></tr>
+          <tr><td>Scheduled</td><td>ตรวจพบเหตุการณ์แล้ว กำลังรอถึงวันที่กำหนด (delay)</td></tr>
+          <tr><td>Done</td><td>ดำเนินการเสร็จแล้ว (ออกคูปอง / เพิ่มเข้าแคมเปญสำเร็จ)</td></tr>
+          <tr><td>Skipped</td><td>พยายามแล้วแต่ไม่ผ่านเงื่อนไข (เช่น รับสิทธิ์ครบโควต้าปีนี้ไปแล้ว)</td></tr>
+        </table>
+        <div class="note-box"><b>เมนู Campaigns → Reporting → Automation Log</b> — ตารางนี้จะเริ่มมีข้อมูลหลัง cron รันจริงครั้งแรก: Recurring รันทุกวันที่ 1 ของเดือน, Event-based รันทุกวัน</div>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-automation-log.png"><div class="shot-cap">หน้าจอ Automation Log</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 15: Summary -->
+  <section class="slide dark" id="slide-15">
+    <div class="eyebrow">สรุปภาพรวม</div>
+    <h2 class="slide-title" style="color:#fff;">จาก Campaign ถึงกำไรที่วัดผลได้ — Flow เดียวจบ</h2>
+    <div class="flow-bar" style="margin-bottom:28px;">
+      <span class="flow-chip" style="background:var(--copper);">สร้าง Campaign</span><span class="flow-arrow">→</span>
+      <span class="flow-chip" style="background:var(--copper);">ตั้ง Reward + Restrict</span><span class="flow-arrow">→</span>
+      <span class="flow-chip" style="background:var(--copper);">Invite</span><span class="flow-arrow">→</span>
+      <span class="flow-chip" style="background:var(--copper);">ลูกค้ารับที่ /coupons</span><span class="flow-arrow">→</span>
+      <span class="flow-chip" style="background:var(--copper);">POS Enter Code</span><span class="flow-arrow">→</span>
+      <span class="flow-chip" style="background:var(--copper);">Converted</span><span class="flow-arrow">→</span>
+      <span class="flow-chip" style="background:var(--copper);">Dashboard</span>
+    </div>
+    <div class="two-col">
+      <div class="col-left compare-box dark-box">
+        <div class="cb-title">แบบตั้งมือ — Campaign ปกติ</div>
+        <div class="cb-body">สร้าง Campaign → เพิ่ม Targets (3 โหมด) → ตั้ง Reward ผูกแคมเปญ → กด Invite เอง ทุกครั้งที่ต้องการยิงแคมเปญใหม่</div>
+      </div>
+      <div class="col-right compare-box dark-box">
+        <div class="cb-title">แบบอัตโนมัติ — Automated Journey</div>
+        <div class="cb-body">ตั้งกฎครั้งเดียว (Recurring หรือ Event-based) → ระบบกด Invite/ออกคูปองให้เองต่อเนื่อง ไม่ต้องกลับมาทำซ้ำ</div>
+      </div>
+    </div>
+    <div style="margin-top:30px;font-size:15.5px;color:#B9C2C8;">มีคำถามเพิ่มเติมระหว่างใช้งานจริง ติดต่อทีมงานได้ตลอดเวลา</div>
+  </section>
+
+</div></div>
+
+<div id="nav">
+  <button onclick="go(-1)">‹</button>
+  <span id="pagecount">1 / 16</span>
+  <button onclick="go(1)">›</button>
+</div>
+
+<div id="lightbox" onclick="closeLightbox()"><img id="lightbox-img" src=""></div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let idx = 0;
+  function render(){
+    slides.forEach((s,i)=>s.classList.toggle('active', i===idx));
+    document.getElementById('pagecount').textContent = (idx+1)+' / '+slides.length;
+  }
+  function go(d){
+    idx = Math.min(slides.length-1, Math.max(0, idx+d));
+    render();
+  }
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight'||e.key===' ') go(1);
+    if(e.key==='ArrowLeft') go(-1);
+  });
+
+  document.querySelectorAll('.shot').forEach(img=>{
+    img.addEventListener('click', ()=>{
+      document.getElementById('lightbox-img').src = img.src;
+      document.getElementById('lightbox').classList.add('active');
+    });
+  });
+  function closeLightbox(){
+    document.getElementById('lightbox').classList.remove('active');
+  }
+  document.addEventListener('keydown', e=>{
+    if(e.key==='Escape') closeLightbox();
+  });
+  function scaleStage(){
+    const wrap = document.getElementById('stage-wrap');
+    const stage = document.getElementById('stage');
+    const scale = Math.min(wrap.clientWidth/1280, wrap.clientHeight/720);
+    stage.style.transform = 'scale('+scale+')';
+  }
+  window.addEventListener('resize', scaleStage);
+  scaleStage();
+  render();
+</script>
+</body>
+</html>
