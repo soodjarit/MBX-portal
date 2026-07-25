@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>MX-RFM — คู่มือระบบ (System Overview)</title>
+<style>
+  :root{
+    --ink:#1B2430;
+    --ink-dark:#0E141C;
+    --indigo:#3B4C7A;
+    --indigo-dark:#28345A;
+    --amber:#C98A2E;
+    --amber-dark:#96631C;
+    --stone:#E5E1D6;
+    --card:#EFECE3;
+    --white:#FFFFFF;
+    --text:#20262C;
+    --muted:#5B6570;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#c7c9c4;font-family:Calibri,Arial,sans-serif;color:var(--text);}
+  #stage-wrap{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  #stage{position:relative;width:1280px;height:720px;background:var(--white);box-shadow:0 10px 40px rgba(0,0,0,.35);flex-shrink:0;}
+  .slide{position:absolute;top:0;left:0;width:1280px;height:720px;padding:56px 64px;display:none;flex-direction:column;overflow:hidden;background:var(--white);}
+  .slide.active{display:flex;}
+  .slide.dark{background:var(--ink-dark);color:var(--stone);}
+
+  .eyebrow{font-size:15px;letter-spacing:2px;text-transform:uppercase;color:var(--amber-dark);font-weight:700;margin-bottom:8px;}
+  .dark .eyebrow{color:#E0B36E;}
+  h1.title{font-size:40px;margin:0 0 6px 0;color:var(--ink);font-weight:700;font-family:Cambria,serif;}
+  .dark h1.title{color:var(--white);}
+  h2.slide-title{font-size:29px;margin:0 0 20px 0;color:var(--ink);font-weight:700;font-family:Cambria,serif;text-wrap:balance;}
+  .subtitle{font-size:18px;color:var(--muted);margin-bottom:0;}
+  .dark .subtitle{color:#B9C2C8;}
+
+  /* Title slide */
+  #slide-0{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;}
+  #slide-0 .big-title{font-size:52px;font-family:Cambria,serif;font-weight:700;color:var(--white);margin:0 0 18px 0;line-height:1.25;}
+  #slide-0 .big-sub{font-size:20px;color:#CBD3D8;max-width:840px;line-height:1.55;}
+  #slide-0 .stamp{position:absolute;bottom:56px;left:64px;font-size:14px;color:#8B97A0;letter-spacing:1px;}
+  #slide-0 .badge{position:absolute;top:56px;right:64px;width:92px;height:92px;border-radius:50%;background:var(--indigo);display:flex;align-items:center;justify-content:center;font-size:26px;color:white;font-weight:700;font-family:Cambria,serif;letter-spacing:1px;}
+
+  /* Case box */
+  .case-box{background:var(--card);border-radius:16px;padding:22px 28px;margin-bottom:20px;display:flex;gap:20px;align-items:flex-start;}
+  .case-icon{flex-shrink:0;width:48px;height:48px;border-radius:50%;background:var(--indigo);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;font-family:Cambria,serif;}
+  .case-text-label{font-size:12.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--indigo-dark);font-weight:700;margin-bottom:4px;}
+  .case-text{font-size:16px;line-height:1.5;color:var(--text);}
+
+  /* Flow bar */
+  .flow-bar{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin-bottom:20px;}
+  .flow-chip{background:var(--ink);color:#fff;font-size:12.5px;padding:8px 14px;border-radius:20px;white-space:nowrap;font-weight:600;}
+  .flow-arrow{color:var(--amber);font-size:16px;margin:0 6px;font-weight:700;}
+
+  /* Body two-col */
+  .two-col{display:flex;gap:32px;align-items:stretch;}
+  .col-left{flex:1;}
+  .col-right{flex:1;display:flex;flex-direction:column;gap:14px;justify-content:center;min-height:0;}
+
+  .step-list{list-style:none;margin:0;padding:0;}
+  .step-list li{display:flex;gap:13px;margin-bottom:12px;align-items:flex-start;}
+  .step-num{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--amber);color:#fff;font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .step-text{font-size:14.5px;line-height:1.48;padding-top:2px;}
+
+  .note-box{background:#EDE7F3;background:#F0EEE6;border-left:4px solid var(--amber);border-radius:8px;padding:14px 18px;font-size:13.5px;line-height:1.48;color:#4A4030;margin-top:8px;}
+  .note-box b{color:var(--amber-dark);}
+  .warn-box{background:#F7ECE3;border-left:4px solid #B5502C;border-radius:8px;padding:14px 18px;font-size:13.5px;line-height:1.48;color:#5A2E18;margin-top:8px;}
+  .warn-box b{color:#8C3A1D;}
+
+  .data-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .data-table th{text-align:left;padding:7px 10px;background:var(--card);color:var(--indigo-dark);font-size:11px;letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--stone);}
+  .data-table td{padding:7px 10px;border-bottom:1px solid var(--stone);vertical-align:top;}
+  .data-table tr:last-child td{border-bottom:none;}
+
+  .compare-box{flex:1;border-radius:14px;padding:20px;}
+  .compare-box.light{background:var(--card);}
+  .compare-box.dark-box{background:rgba(255,255,255,.08);}
+  .compare-box .cb-title{font-weight:700;margin-bottom:8px;}
+  .compare-box.light .cb-title{color:var(--indigo-dark);}
+  .compare-box.dark-box .cb-title{color:#E0B36E;}
+  .compare-box .cb-body{font-size:14px;line-height:1.6;}
+  .compare-box.dark-box .cb-body{color:#DDE3E0;}
+
+  .footer-tag{position:absolute;bottom:24px;left:64px;font-size:12px;color:var(--muted);letter-spacing:.5px;}
+  .page-num{position:absolute;bottom:24px;right:64px;font-size:12px;color:var(--muted);}
+
+  /* Architecture diagram */
+  .arch-col{display:flex;flex-direction:column;gap:5px;flex:1;justify-content:center;}
+  .arch-box{border-radius:10px;padding:9px 18px;font-size:13px;line-height:1.35;}
+  .arch-box .ab-label{font-size:10.5px;letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-bottom:2px;}
+  .arch-source{background:#DCD8CC;color:var(--ink);}
+  .arch-fact{background:var(--indigo);color:#fff;}
+  .arch-fact .ab-label{color:#C7D0E6;}
+  .arch-config{background:var(--amber);color:#fff;}
+  .arch-config .ab-label{color:#FCEBD0;}
+  .arch-interp{background:var(--ink);color:#fff;}
+  .arch-interp .ab-label{color:#C9CED4;}
+  .arch-down{text-align:center;color:var(--muted);font-size:15px;font-weight:700;margin:0;line-height:1;}
+  .arch-consumers{display:flex;gap:12px;margin-top:5px;}
+  .arch-consumer{flex:1;background:var(--card);border-radius:10px;padding:8px 14px;font-size:12.5px;text-align:center;font-weight:700;color:var(--indigo-dark);}
+
+  /* Segment 3x3 grid */
+  .seg-grid-wrap{display:grid;grid-template-columns:90px repeat(3,1fr);grid-template-rows:auto repeat(3,1fr);gap:6px;flex:1;}
+  .seg-hdr{display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;color:var(--indigo-dark);text-align:center;letter-spacing:.3px;}
+  .seg-row-hdr{display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;color:var(--indigo-dark);text-align:center;writing-mode:vertical-rl;transform:rotate(180deg);}
+  .seg-cell{border-radius:10px;padding:10px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;color:#fff;font-size:13px;font-weight:700;line-height:1.25;}
+  .seg-cell span{display:block;font-size:10.5px;font-weight:400;opacity:.85;margin-top:3px;}
+
+  /* KPI stat cards */
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  .kpi-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 18px;}
+  .kpi-label{font-size:12px;color:#A9B4BC;margin-bottom:8px;}
+  .kpi-value{font-size:32px;font-weight:700;font-variant-numeric:tabular-nums;color:#fff;}
+  .kpi-value small{font-size:16px;font-weight:400;color:#B9C2C8;margin-left:2px;}
+
+  /* Bar chart */
+  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
+  .bar-label{width:150px;flex-shrink:0;font-size:12.5px;text-align:right;color:var(--text);}
+  .bar-track{flex:1;background:var(--card);border-radius:6px;height:20px;position:relative;}
+  .bar-fill{height:100%;border-radius:6px;min-width:2px;}
+  .bar-value{width:34px;flex-shrink:0;font-size:12.5px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;}
+
+  .code-block{background:var(--ink-dark);color:#D7DCE1;border-radius:12px;padding:18px 22px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.7;overflow-x:auto;}
+  .code-block .cm{color:#7C8896;}
+  .code-block .kw{color:#E0B36E;}
+
+  /* nav */
+  #nav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;z-index:50;background:rgba(0,0,0,.55);padding:8px 16px;border-radius:24px;}
+  #nav button{background:var(--amber);color:#fff;border:none;border-radius:50%;width:34px;height:34px;font-size:16px;cursor:pointer;}
+  #nav button:hover{background:var(--amber-dark);}
+  #nav button:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+  #nav span{color:#fff;font-size:13px;min-width:50px;text-align:center;}
+
+  @media print{
+    #nav{display:none;}
+    #stage-wrap{width:auto;height:auto;overflow:visible;background:none;}
+    #stage{box-shadow:none;}
+    .slide{position:relative;display:block !important;page-break-after:always;}
+  }
+</style>
+</head>
+<body>
+<div id="stage-wrap"><div id="stage">
+
+  <!-- SLIDE 0: Title -->
+  <section class="slide dark active" id="slide-0">
+    <div class="badge">RFM</div>
+    <div class="eyebrow">MBX Group · Odoo 19 · Data &amp; Segmentation Platform</div>
+    <div class="big-title">MX-RFM<br>คู่มือระบบ (System Overview)</div>
+    <div class="big-sub">เครื่องมือคำนวณ RFM segmentation แบบ time-series รายเดือน — แยก Fact (ข้อมูลดิบ) ออกจาก Interpretation (คะแนน+segment) เพื่อให้เปลี่ยน config ได้โดยไม่ต้องคำนวณใหม่ทั้งหมด</div>
+    <div class="stamp">MX-RFM v3 · schema `rfm` บน odoo19-mbxai · rebuild ทั้งชุด + ship จริง 2026-07-24–25</div>
+  </section>
+
+  <!-- SLIDE 1: Why rebuild -->
+  <section class="slide" id="slide-1">
+    <div class="eyebrow">บทที่ 01 · ทำไมต้อง Rebuild ทั้งชุด</div>
+    <h2 class="slide-title">v1 คำนวณได้ครบ แต่ผลลัพธ์ไม่มีใครเชื่อ</h2>
+    <div class="case-box">
+      <div class="case-icon">?</div>
+      <div>
+        <div class="case-text-label">โจทย์</div>
+        <div class="case-text">v1 เป็น single-snapshot dashboard บน Grafana ล้วน — ตรวจสอบลึกแล้วพบว่าข้อมูล demo (MBX-D) สุ่มลูกค้าเข้าออเดอร์แบบ <b>uniform random</b> ทำให้ทุกคนซื้อถี่ใกล้เคียงกันหมด (Café: min 108 / max 171 / stddev 12.7 ครั้ง) — F (Frequency) แทบไม่มี signal ให้แยก segment ได้จริง</div>
+      </div>
+    </div>
+    <div class="flow-bar">
+      <span class="flow-chip">v1: Grafana + single snapshot</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">พบ demo data แบนผิดปกติ</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">Regenerate ด้วย 8 cohort behavior</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">Schema v3 ใหม่ทั้งชุด</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">เชื่อผลได้จริง</span>
+    </div>
+    <div class="note-box"><b>ผลหลัง regenerate:</b> stddev ของ frequency ต่อคนขยับจาก 12.7 → 61.3 (37,146 orders / 67,816 lines สร้างใหม่ทั้งหมด) — cohort แต่ละกลุ่ม (steady_loyal / rising_star / declining / churned / winback / one_and_done / seasonal / new_recent) มีพฤติกรรมต่างกันจริงตาม trajectory ที่ออกแบบไว้</div>
+  </section>
+
+  <!-- SLIDE 2: Architecture overview -->
+  <section class="slide" id="slide-2">
+    <div class="eyebrow">บทที่ 02 · สถาปัตยกรรม</div>
+    <h2 class="slide-title">4 ชั้นแยกอิสระ เชื่อมกันด้วย config version</h2>
+    <div class="two-col" style="gap:0;">
+      <div class="arch-col">
+        <div class="arch-box arch-source"><div class="ab-label">แหล่งข้อมูล</div>Odoo <code>sale_order</code> — MBX Café (company_id=3)</div>
+        <div class="arch-down">↓</div>
+        <div class="arch-box arch-fact"><div class="ab-label">Fact Layer</div><code>rfm.fact_customer_month</code> — R/F/M ดิบ ไม่ผูก config, คำนวณครั้งเดียวไม่ต้องแตะซ้ำ</div>
+        <div class="arch-down">↓ JOIN config ↑</div>
+        <div class="arch-box arch-config"><div class="ab-label">Config Layer — Odoo module <code>mx_rfm</code></div>Scoring Config (per company) + Segment Map (shared) — CRUD UI, access rights, audit trail, ต้อง Activate ก่อนใช้</div>
+        <div class="arch-down">↓</div>
+        <div class="arch-box arch-interp"><div class="ab-label">Interpretation Layer (append-only)</div><code>interpretation_customer_month</code> + <code>transition</code> — หลาย config version อยู่ร่วมกันได้บน fact เดียวกัน</div>
+        <div class="arch-consumers">
+          <div class="arch-consumer">Grafana<br><span style="font-weight:400;">mx-rfm-v3</span></div>
+          <div class="arch-consumer">MX-BMC<br><span style="font-weight:400;">RFM Dashboard</span></div>
+          <div class="arch-consumer">CDP-CM<br><span style="font-weight:400;">mx_campaign targeting</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="note-box" style="margin-top:10px;"><b>กฎเหล็ก:</b> RFM ต้องไม่ผูกกับ <code>mx_campaign</code> — เพราะมีผู้บริโภคอิสระหลายราย ถ้าฝังเป็น submodule ของ campaign, Grafana/MX-BMC จะต้อง depend บน campaign module ทั้งที่ไม่เกี่ยวข้องกันเลย</div>
+  </section>
+
+  <!-- SLIDE 3: Fact layer -->
+  <section class="slide" id="slide-3">
+    <div class="eyebrow">บทที่ 03 · Fact Layer</div>
+    <h2 class="slide-title">ข้อมูลดิบต่อ (บริษัท, ลูกค้า, เดือน) — ไม่ผูก config ใดๆ</h2>
+    <div class="two-col">
+      <div class="col-left">
+        <table class="data-table">
+          <tr><th>Field</th><th>ความหมาย</th></tr>
+          <tr><td><code>recency_days</code></td><td>วันนับจากซื้อล่าสุด ถึงสิ้นเดือน snapshot</td></tr>
+          <tr><td><code>frequency_count</code></td><td>จำนวนบิล rolling 12 เดือน (ไม่ใช่ทั้งชีวิต)</td></tr>
+          <tr><td><code>monetary_total</code></td><td>ยอดซื้อรวม rolling 12 เดือน</td></tr>
+          <tr><td><code>customer_status</code></td><td><b>new</b> / <b>active</b> / <b>returning</b> / <b>lost</b> — เทียบกับเดือนก่อนหน้าตามลำดับ</td></tr>
+        </table>
+        <div class="note-box"><b>ลูกค้าไม่หายจาก time series:</b> เดือนไหนไม่ซื้อเลย ยังมีแถวอยู่ (status=lost, recency ไล่นับต่อไปเรื่อยๆ) — กันไม่ให้ลูกค้าหลุดหายจาก snapshot ตามที่ brief กำหนด</div>
+      </div>
+      <div class="col-right">
+        <div class="compare-box light">
+          <div class="cb-title">Walk-in / Guest ไม่รวมในตารางนี้เลย</div>
+          <div class="cb-body">Partner ที่เป็น "Demo/Guest Customer" ต่อบริษัท (list ใน <code>company_walkin_partner</code>) ถูก exclude ตั้งแต่ query แรก — ไปนับแยกที่ <code>company_month_unidentified</code> แทน (bill_count / revenue_total / pct_of_revenue ต่อบริษัท-เดือน)<br><br><b>เหตุผล:</b> ถ้ารวมเป็น virtual customer คนเดียวแบบ v1 เดิม จะกลายเป็น "ลูกค้า" ที่มีบิลเป็นพัน กลืน segment distribution ทั้งหมด</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: Config layer -->
+  <section class="slide" id="slide-4">
+    <div class="eyebrow">บทที่ 04 · Config Layer — Odoo module <code>mx_rfm</code></div>
+    <h2 class="slide-title">Threshold/Segment เป็น version — ต้อง Activate ก่อนถึงมีผล</h2>
+    <div class="two-col">
+      <div class="col-left compare-box light">
+        <div class="cb-title">Scoring Config Version</div>
+        <div class="cb-body">Company-scoped (silo ir.rule ต่อบริษัท เพราะจังหวะซื้อไม่เท่ากัน)<br>ต้องมี threshold ครบ <b>score level 1-5 ทั้ง R/F/M</b> ก่อนกด Activate ได้<br>Activate แล้ว version อื่นของบริษัทเดียวกันถูก archive อัตโนมัติ — <b>active ได้ทีละ 1 ต่อบริษัท</b></div>
+      </div>
+      <div class="col-right compare-box light">
+        <div class="cb-title">Segment Config Version</div>
+        <div class="cb-body">ไม่ company-scoped — <b>ใช้ map เดียวข้ามทุกบริษัท</b><br>ต้องมีอย่างน้อย 1 rule ก่อน Activate<br>Priority-ordered: ไล่ทีละแถว แถวแรกที่ range ตรงชนะ (แถวสุดท้ายมักเป็น catch-all)</div>
+      </div>
+    </div>
+    <div class="note-box" style="margin-top:16px;"><b>Audit trail อัตโนมัติ:</b> กด Activate แล้วระบบ stamp <code>approved_by</code>/<code>approved_at</code> ให้เอง — เมนู Settings → MX-RFM → Scoring Config / Segment Map</div>
+    <div class="warn-box"><b>เช็คบริษัทให้ถูกก่อนบอกว่า "list ว่าง":</b> Scoring Config list กรองตาม company switcher มุมขวาบนเสมอ (ไม่ใช่บั๊ก) — Segment Map ไม่มี filter นี้ เห็นเสมอไม่ว่าอยู่บริษัทไหน</div>
+  </section>
+
+  <!-- SLIDE 5: Interpretation + Transition -->
+  <section class="slide" id="slide-5">
+    <div class="eyebrow">บทที่ 05 · Interpretation + Transition</div>
+    <h2 class="slide-title">Append-only — เปลี่ยน config แล้ว version เก่ายังอยู่ครบ</h2>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text">Key ของ <code>interpretation_customer_month</code> มี <code>scoring_version_id</code>+<code>segment_version_id</code> รวมอยู่ด้วย — recompute ด้วย config ใหม่ไม่ทับของเก่า เทียบ before/after ได้เสมอ</span></li>
+          <li><span class="step-num">2</span><span class="step-text"><code>compute_segment()</code> ไล่ตาม <code>priority</code> ทีละแถวจนกว่าจะเจอ range ที่ match — แถวแรกที่ match ชนะ</span></li>
+          <li><span class="step-num">3</span><span class="step-text"><code>transition</code> เทียบ segment เดือนนี้กับเดือนก่อน (self-join) นับ customer_count + revenue_value ต่อคู่ from→to — <b>ตารางที่ dashboard ใช้เยอะที่สุด</b></span></li>
+        </ul>
+      </div>
+      <div class="col-right">
+        <div class="compare-box light">
+          <div class="cb-title">ตัวอย่างการ migrate จริง (smoke-test เดือนหนึ่ง)</div>
+          <table class="data-table" style="margin-top:8px;">
+            <tr><th>From</th><th>To</th><th>Customers</th></tr>
+            <tr><td>Loyal Customers</td><td>Champions</td><td>6</td></tr>
+            <tr><td>Champions</td><td>Loyal Customers</td><td>4</td></tr>
+            <tr><td>New Customers</td><td>Promising</td><td>3</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: Segment grid -->
+  <section class="slide" id="slide-6">
+    <div class="eyebrow">บทที่ 06 · Segment Map ปัจจุบัน</div>
+    <h2 class="slide-title">Grid 3×3 ไม่ทับซ้อนกัน — 9 segments พอดี 9 ช่อง</h2>
+    <div class="seg-grid-wrap">
+      <div></div>
+      <div class="seg-hdr">F = 1<br>ซื้อครั้งเดียว</div>
+      <div class="seg-hdr">F = 2–3</div>
+      <div class="seg-hdr">F = 4–5<br>ซื้อบ่อย</div>
+
+      <div class="seg-row-hdr">R 4–5 · ล่าสุด</div>
+      <div class="seg-cell" style="background:#4A79B5;">New Customers<span>ลูกค้าใหม่</span></div>
+      <div class="seg-cell" style="background:#4FA39A;">Potential Loyalists</div>
+      <div class="seg-cell" style="background:#3B4C7A;">Champions</div>
+
+      <div class="seg-row-hdr">R = 3 · กลาง</div>
+      <div class="seg-cell" style="background:#8A8B3E;">Promising<span>cell แคบ หายาก</span></div>
+      <div class="seg-cell" style="background:#D89614;">Need Attention</div>
+      <div class="seg-cell" style="background:#2F7566;">Loyal Customers</div>
+
+      <div class="seg-row-hdr">R 1–2 · นานแล้ว</div>
+      <div class="seg-cell" style="background:#7A8088;">Hibernating<span>รวม v1's "Lost" ไว้ในนี้</span></div>
+      <div class="seg-cell" style="background:#C0483B;">At Risk</div>
+      <div class="seg-cell" style="background:#9C3B63;">Cant Lose Them</div>
+    </div>
+    <div class="note-box" style="margin-top:14px;"><b>M (Monetary)</b> ไม่ได้กำหนด segment ตรงๆ — ใช้แยกเฉพาะ cell ที่ value-sensitive เพิ่มเติม · <b>Promising / New Customers</b> เป็น cell แคบ (single-value×single-value) พบจริงแค่ 3/25 และ 7/25 เดือนในข้อมูล backfill — หายากแต่ไม่ใช่บั๊ก</div>
+  </section>
+
+  <!-- SLIDE 7: Lost vs Hibernating -->
+  <section class="slide" id="slide-7">
+    <div class="eyebrow">บทที่ 07 · คนละชั้น คนละความหมาย</div>
+    <h2 class="slide-title">"Lost" (Fact) ไม่ใช่ตัวเดียวกับ "Hibernating" (Segment)</h2>
+    <div class="two-col">
+      <div class="col-left compare-box light">
+        <div class="cb-title">Lost — Fact-layer event</div>
+        <div class="cb-body">เดือนนี้ไม่ซื้อเลย (<code>customer_status='lost'</code>) — เป็น event รายเดือน อายุสั้น เดือนหน้าซื้ออีกก็หลุดจากสถานะนี้ทันที<br><br><b>เดือนตัวอย่างจริง (2026-05, Café): 103 คน</b></div>
+      </div>
+      <div class="col-right compare-box light">
+        <div class="cb-title">Hibernating — RFM Segment</div>
+        <div class="cb-body">R ต่ำ + F ต่ำ สะสม — เป็น profile ระยะยาว ไม่ใช่ event 1 เดือน<br><br><b>เดือนเดียวกัน: 57 คน</b> — 100% ของ 57 คนนี้เป็น "lost" เดือนนั้นด้วย</div>
+      </div>
+    </div>
+    <div class="note-box" style="margin-top:16px;"><b>ทำไมตัวเลขไม่เท่ากัน:</b> จาก 103 คนที่ "lost" เดือนนั้น มีแค่ 57 คนที่สะสมจนกลายเป็น Hibernating — อีก <b>46 คนยังเป็น At Risk อยู่</b> (ยังไม่ตกไปถึงระดับ Hibernating) แม้เดือนนี้จะไม่ซื้อเลยก็ตาม</div>
+  </section>
+
+  <!-- SLIDE 8: Compute pipeline -->
+  <section class="slide" id="slide-8">
+    <div class="eyebrow">บทที่ 08 · วิธีรันคำนวณ</div>
+    <h2 class="slide-title">รันมือทีละ 4 ขั้น — ยังไม่มี cron อัตโนมัติใน v3</h2>
+    <div class="code-block">
+<span class="cm">-- 1) Fact: คำนวณทั้งประวัติของบริษัทในรอบเดียว</span><br>
+<span class="kw">SELECT</span> rfm.refresh_fact_history(3);<br><br>
+<span class="cm">-- 2) Walk-in aggregate ต่อเดือน</span><br>
+<span class="kw">SELECT</span> rfm.refresh_unidentified(3, '2026-05-01');<br><br>
+<span class="cm">-- 3) Score + Segment ตาม config version ที่ active</span><br>
+<span class="kw">SELECT</span> rfm.refresh_interpretation(3, '2026-05-01', &lt;scoring_id&gt;, &lt;segment_id&gt;);<br><br>
+<span class="cm">-- 4) Month-over-month migration</span><br>
+<span class="kw">SELECT</span> rfm.refresh_transition(3, '2026-05-01', &lt;scoring_id&gt;, &lt;segment_id&gt;);
+    </div>
+    <div class="warn-box"><b>v1 มี n8n cron รายเดือนอัตโนมัติ (WF-RFM-COMPUTE) — v3 ยังไม่มี.</b> ต้องรันมือทุกเดือน หรือสร้าง n8n workflow ใหม่ผูกกับ 4 คำสั่งนี้ — ยังไม่ได้ทำ เป็น gap ที่ควรพิจารณาถ้าจะใช้งานต่อเนื่องระยะยาว</div>
+  </section>
+
+  <!-- SLIDE 9: Dashboard tour 1 - KPI -->
+  <section class="slide dark" id="slide-9">
+    <div class="eyebrow">บทที่ 09 · Dashboard mx-rfm-v3 (1/2)</div>
+    <h2 class="slide-title" style="color:#fff;">8 KPI แถวบน — ตัวเลขจริงจาก MBX Café, พ.ค. 2026</h2>
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-label">Total Customers (Segment Map)</div><div class="kpi-value">300</div></div>
+      <div class="kpi-card"><div class="kpi-label">New Customers</div><div class="kpi-value">1</div></div>
+      <div class="kpi-card"><div class="kpi-label">Champions</div><div class="kpi-value">77</div></div>
+      <div class="kpi-card"><div class="kpi-label">At Risk + Cant Lose Them</div><div class="kpi-value">79</div></div>
+      <div class="kpi-card"><div class="kpi-label">Migration Rate MoM</div><div class="kpi-value">29.8<small>%</small></div></div>
+      <div class="kpi-card"><div class="kpi-label">Walk-in % of Revenue</div><div class="kpi-value">4.8<small>%</small></div></div>
+      <div class="kpi-card"><div class="kpi-label">Lost Customers</div><div class="kpi-value">103</div></div>
+      <div class="kpi-card"><div class="kpi-label">YTD Sales (บาท)</div><div class="kpi-value">1.11<small>M</small></div></div>
+    </div>
+    <div class="note-box" style="margin-top:20px;background:rgba(255,255,255,.07);border-left-color:var(--amber);color:#DDE3E0;"><b>Filter ด้านบน:</b> <code>$company</code> (VOLTA AV / MBX Café / VIVO Sport) + <code>$month</code> (ทุกเดือนที่มีข้อมูล เรียงล่าสุดก่อน) — กรองทุก KPI/distribution/transition panel พร้อมกัน · Trend/Walk-in panel ไม่ผูก <code>$month</code> โชว์เต็มประวัติเสมอ</div>
+  </section>
+
+  <!-- SLIDE 10: Dashboard tour 2 - Distribution -->
+  <section class="slide" id="slide-10">
+    <div class="eyebrow">บทที่ 10 · Dashboard mx-rfm-v3 (2/2)</div>
+    <h2 class="slide-title">Segment Distribution — เดือนเดียวกัน รวม 300 คนพอดี</h2>
+    <div class="two-col">
+      <div class="col-left" style="width:100%;">
+        <div class="bar-row"><div class="bar-label">Champions</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:#3B4C7A;"></div></div><div class="bar-value">77</div></div>
+        <div class="bar-row"><div class="bar-label">At Risk</div><div class="bar-track"><div class="bar-fill" style="width:90.9%;background:#C0483B;"></div></div><div class="bar-value">70</div></div>
+        <div class="bar-row"><div class="bar-label">Hibernating</div><div class="bar-track"><div class="bar-fill" style="width:74%;background:#7A8088;"></div></div><div class="bar-value">57</div></div>
+        <div class="bar-row"><div class="bar-label">Potential Loyalists</div><div class="bar-track"><div class="bar-fill" style="width:50.6%;background:#4FA39A;"></div></div><div class="bar-value">39</div></div>
+        <div class="bar-row"><div class="bar-label">Loyal Customers</div><div class="bar-track"><div class="bar-fill" style="width:41.5%;background:#2F7566;"></div></div><div class="bar-value">32</div></div>
+        <div class="bar-row"><div class="bar-label">Need Attention</div><div class="bar-track"><div class="bar-fill" style="width:19.4%;background:#D89614;"></div></div><div class="bar-value">15</div></div>
+        <div class="bar-row"><div class="bar-label">Cant Lose Them</div><div class="bar-track"><div class="bar-fill" style="width:11.6%;background:#9C3B63;"></div></div><div class="bar-value">9</div></div>
+        <div class="bar-row"><div class="bar-label">New Customers</div><div class="bar-track"><div class="bar-fill" style="width:1.3%;background:#4A79B5;"></div></div><div class="bar-value">1</div></div>
+        <div class="bar-row"><div class="bar-label">Promising</div><div class="bar-track"><div class="bar-fill" style="width:0%;background:#8A8B3E;"></div></div><div class="bar-value">0</div></div>
+      </div>
+    </div>
+    <div class="note-box" style="margin-top:6px;"><b>ไม่ hardcode version id ในทุก query</b> — ทุก panel resolve version ที่ <code>status='active'</code> แบบ dynamic เสมอ ดังนั้นเปลี่ยน/activate config ใหม่ใน Odoo แล้ว dashboard ตามทันโดยไม่ต้องแก้ query · VOLTA AV/VIVO Sport ยังว่างเพราะยังไม่มี active config ของตัวเอง (ตามสโคป "Café first")</div>
+  </section>
+
+  <!-- SLIDE 11: Integration -->
+  <section class="slide" id="slide-11">
+    <div class="eyebrow">บทที่ 11 · เชื่อมกับระบบอื่น</div>
+    <h2 class="slide-title">Segment ไหลเข้า res.partner แล้วต่อไปยัง CDP-CM</h2>
+    <div class="flow-bar">
+      <span class="flow-chip">interpretation_customer_month</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">cron_sync_rfm_segments (รายเดือน)</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">res.partner.rfm_segment</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">campaign.segment "Apply RFM Segment"</span>
+    </div>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text"><code>res.partner</code> เพิ่ม 5 field: <code>rfm_segment</code>, <code>rfm_r_score</code>, <code>rfm_f_score</code>, <code>rfm_m_score</code>, <code>rfm_snapshot_month</code> — readonly ทั้งหมด เขียนได้ทางเดียวผ่าน cron เท่านั้น</span></li>
+          <li><span class="step-num">2</span><span class="step-text"><code>mx_campaign</code> เพิ่ม depend บน <code>mx_rfm</code> ทางเดียว (RFM ไม่ depend กลับ — ไม่ผิดกฎ independence)</span></li>
+          <li><span class="step-num">3</span><span class="step-text"><code>campaign.segment</code> มี dropdown <code>rfm_segment_helper</code> + ปุ่ม "Apply RFM Segment" ที่เขียน domain <code>[('rfm_segment','=',&lt;เลือก&gt;)]</code> ลง Filter Domain ให้อัตโนมัติ — กัน marketer พิมพ์ domain เองแล้วพิมพ์ผิด</span></li>
+        </ul>
+      </div>
+      <div class="col-right">
+        <div class="warn-box"><b>ยังใช้งานจริงไม่ได้จนกว่าจะทำสิ่งนี้ก่อน:</b><br><code>ir_cron_rfm_sync_partner_segments</code> เป็น <code>active=False</code> โดยดีไซน์ และไม่เคยรันเลยสักครั้ง → <code>res.partner.rfm_segment</code> ว่างเปล่าทุกคนตอนนี้ → segment ที่เลือกใน campaign audience builder จะได้ partner_count=0 เสมอจนกว่าจะ activate cron นี้แล้วรันอย่างน้อย 1 ครั้ง</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 12: Onboarding checklist -->
+  <section class="slide" id="slide-12">
+    <div class="eyebrow">บทที่ 12 · เพิ่มบริษัทใหม่ (VOLTA AV / VIVO Sport)</div>
+    <h2 class="slide-title">7 ขั้นตอนมาตรฐาน ก่อนเปิดใช้บริษัทที่ 2/3</h2>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text">เช็คสัดส่วนบิลที่ระบุตัวตนลูกค้าได้ (ผ่านเกณฑ์ ≥30% แล้วทั้งคู่ — VOLTA 93.6%, VIVO 99.0%)</span></li>
+          <li><span class="step-num">2</span><span class="step-text"><code>SELECT rfm.refresh_fact_history(&lt;company_id&gt;);</code> — คำนวณ Fact ทั้งประวัติ</span></li>
+          <li><span class="step-num">3</span><span class="step-text">รัน <code>recommend_threshold.py</code> เพื่อ propose threshold ของบริษัทนั้น (M มักต้องปรับ log-scale เอง ไม่รับ default ตรงๆ)</span></li>
+          <li><span class="step-num">4</span><span class="step-text">Human review + สร้าง Scoring Config Version ใน Odoo (threshold ครบ 1-5 ทั้ง R/F/M) → Activate</span></li>
+        </ul>
+      </div>
+      <div class="col-right">
+        <ul class="step-list">
+          <li><span class="step-num">5</span><span class="step-text">รัน <code>refresh_interpretation</code> + <code>refresh_transition</code> ทีละเดือนหรือ backfill ทั้งชุด</span></li>
+          <li><span class="step-num">6</span><span class="step-text">เช็ค fill-rate (score 1-5 ควรมีคนอยู่ 5-40% ยกเว้น F=1) + segment coverage ก่อนถือว่าใช้งานได้จริง</span></li>
+          <li><span class="step-num">7</span><span class="step-text">Dashboard เห็นข้อมูลทันทีเมื่อเลือก <code>$company</code> เป็นบริษัทนั้น — ไม่ต้องแก้ query ใดๆ</span></li>
+        </ul>
+        <div class="note-box"><b>ก่อนเริ่ม:</b> VOLTA/VIVO ยังใช้ demo data แบบ uniform-random เดิม — ควร regenerate เป็น cohort-based ก่อนเหมือน Café ไม่งั้น F dimension จะไม่มี signal จริงเช่นเดียวกับที่เจอใน v1</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 13: Known gaps -->
+  <section class="slide" id="slide-13">
+    <div class="eyebrow">บทที่ 13 · สิ่งที่ต้องระวัง</div>
+    <h2 class="slide-title">Known Gaps — เช็คก่อนใช้งานจริงหรือแก้ schema ครั้งหน้า</h2>
+    <div class="two-col">
+      <div class="col-left">
+        <div class="warn-box" style="margin-bottom:12px;">ไม่มี cron รันคำนวณอัตโนมัติรายเดือน (v1 มี n8n cron, v3 ยังไม่ได้สร้างใหม่)</div>
+        <div class="warn-box" style="margin-bottom:12px;"><code>ir_cron_rfm_sync_partner_segments</code> ยัง inactive — ต้อง activate ก่อนใช้กับ mx_campaign</div>
+        <div class="warn-box">VOLTA AV / VIVO Sport ยังไม่มี config/backfill — dashboard เห็นแต่ Café</div>
+      </div>
+      <div class="col-right">
+        <div class="warn-box" style="margin-bottom:12px;">MX-BMC RFM Dashboard + MXP Unified Dashboard (4 views) อ่านตาราง <code>rfm.*</code> ตรงๆ — เปลี่ยน schema ครั้งหน้าต้องเช็คทั้งคู่ก่อนเสมอ (เคยพังมาแล้ว 1 รอบ)</div>
+        <div class="warn-box">XML-RPC quirk: <code>action_activate()</code>/<code>action_apply_rfm_segment()</code> return <code>None</code> ทำให้ client โยน error แม้ server สำเร็จจริง — เช็คผ่าน psql/fields_get แทนถ้าไม่แน่ใจ</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 14: Summary -->
+  <section class="slide dark" id="slide-14">
+    <div class="eyebrow">สรุปภาพรวม</div>
+    <h2 class="slide-title" style="color:#fff;">จาก sale_order ถึง Segment ที่ใช้งานได้จริง 3 ทาง</h2>
+    <div class="flow-bar" style="margin-bottom:24px;">
+      <span class="flow-chip" style="background:var(--indigo);">sale_order</span><span class="flow-arrow">→</span>
+      <span class="flow-chip" style="background:var(--indigo);">Fact Layer</span><span class="flow-arrow">→</span>
+      <span class="flow-chip" style="background:var(--amber);">Config (mx_rfm)</span><span class="flow-arrow">→</span>
+      <span class="flow-chip" style="background:var(--indigo);">Interpretation</span><span class="flow-arrow">→</span>
+      <span class="flow-chip" style="background:var(--indigo);">Grafana / MX-BMC / CDP-CM</span>
+    </div>
+    <div class="two-col">
+      <div class="col-left compare-box dark-box">
+        <div class="cb-title">อยู่ที่ไหน</div>
+        <div class="cb-body">Schema + functions: <code>sql/v3_block1_schema.sql</code>, <code>v3_block2_functions.sql</code><br>Odoo module: <code>odoo19-community-mbx/addons/mx_rfm</code> (branch <code>project/mx-rfm</code>)<br>Dashboard JSON: <code>grafana/v3_dashboard.json</code><br>Methodology: <code>threshold-methodology.md</code></div>
+      </div>
+      <div class="col-right compare-box dark-box">
+        <div class="cb-title">ก่อนใช้งานต่อ ต้องทำอะไรก่อน</div>
+        <div class="cb-body">1) Activate <code>ir_cron_rfm_sync_partner_segments</code><br>2) วางแผน cron รายเดือนแทน n8n เดิม<br>3) Onboard VOLTA AV / VIVO Sport ตาม checklist บทที่ 12</div>
+      </div>
+    </div>
+    <div style="margin-top:26px;font-size:15px;color:#B9C2C8;">คู่มือฉบับเต็มพร้อมรายละเอียดทุกตาราง/ฟังก์ชัน: <code>claude-knowledge/projects/mx-rfm/manual.md</code></div>
+  </section>
+
+</div></div>
+
+<div id="nav">
+  <button onclick="go(-1)" aria-label="Previous slide">‹</button>
+  <span id="pagecount">1 / 15</span>
+  <button onclick="go(1)" aria-label="Next slide">›</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let idx = 0;
+  function render(){
+    slides.forEach((s,i)=>s.classList.toggle('active', i===idx));
+    document.getElementById('pagecount').textContent = (idx+1)+' / '+slides.length;
+  }
+  function go(d){
+    idx = Math.min(slides.length-1, Math.max(0, idx+d));
+    render();
+  }
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight'||e.key===' ') go(1);
+    if(e.key==='ArrowLeft') go(-1);
+  });
+  function scaleStage(){
+    const wrap = document.getElementById('stage-wrap');
+    const stage = document.getElementById('stage');
+    const scale = Math.min(wrap.clientWidth/1280, wrap.clientHeight/720);
+    stage.style.transform = 'scale('+scale+')';
+  }
+  window.addEventListener('resize', scaleStage);
+  scaleStage();
+  render();
+</script>
+</body>
+</html>
