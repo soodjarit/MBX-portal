@@ -169,17 +169,21 @@
   <section class="slide" id="slide-3">
     <div class="type-pill">ประเภท 2 / 7</div>
     <div class="eyebrow">Birthday Campaign</div>
-    <h2 class="slide-title">Segment Filter — หรือให้ระบบส่งเองทุกเดือนด้วย Automated Journey</h2>
+    <h2 class="slide-title">วันเกิดลูกค้าแต่ละคน — ระบบส่งคูปองให้เองอัตโนมัติ ไม่ต้องยิงแคมเปญราย event</h2>
     <div class="two-col">
       <div class="col-left">
         <ul class="step-list">
-          <li><span class="step-num">1</span><span class="step-text">Segment Filter — Domain: <code>Birth Date</code> เดือนตรงกับเดือนปัจจุบัน</span></li>
-          <li><span class="step-num">2</span><span class="step-text">Reward ฝั่ง MXP มี Privilege Condition = "Birthday Month" เช็คซ้ำอัตโนมัติอยู่แล้วตอนลูกค้ากดรับ — campaign segment แค่เลือกกลุ่มเพื่อยิง Invite</span></li>
+          <li><span class="step-num">1</span><span class="step-text">Reward → tab MBX Membership → Eligibility Rule = <code>Birthday Month</code> (เช็คจากฟิลด์ Birth Date ของ partner จริง)</span></li>
+          <li><span class="step-num">2</span><span class="step-text">Automated Journey Rule → Trigger Type = <code>Recurring</code> → ผูกกับ Reward ด้านบน</span></li>
+          <li><span class="step-num">3</span><span class="step-text">Cron รายวันสแกนหาลูกค้าที่เดือนเกิดตรงกับเดือนปัจจุบัน → ออกคูปองให้อัตโนมัติ ไม่ต้องเข้าไป Add Targets เอง</span></li>
         </ul>
-        <div class="note-box"><b>ตัวอย่างจริงในระบบ:</b> "วันเฉลิมพระชนมพรรษาสมเด็จพระราชินี — Golden Perk" (ธีมวันเกิด) — claim rate <b>67.3%</b>, usage rate <b>64.9%</b> — สูงกว่าค่าเฉลี่ยทั้งระบบ (48.4%/51.7%) เพราะเป็นแคมเปญกลุ่มสมาชิก loyalty ที่ engagement สูงอยู่แล้ว</div>
+        <div class="note-box"><b>รันจริงแล้ว:</b> ตั้ง Reward "Birthday Month 10% Discount Coupon" + Rule "Birthday Month — Auto-Claim 10% Coupon" ให้ลูกค้า [DEMO-LOYAL] คุณสุดา (เดือนเกิดกรกฎาคม) → cron ยิงอัตโนมัติ → claim สถานะ <b>Done</b> + ออกคูปอง <code>CDPDEMOC-A780465332</code> (ลด 10%, หมดอายุ 30 วัน) ให้ทันที ไม่ต้องมีคนกดอะไรเลย</div>
       </div>
       <div class="col-right">
-        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-automated-journey-recurring-form.png"><div class="shot-cap">ทางเลือก: Automated Journey Rule แบบ Recurring — ไม่ต้องกด Add Targets มือทุกเดือน</div></div>
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-automated-journey-birthday-real.png"><div class="shot-cap">Automated Journey Rule จริง — ตั้งครั้งเดียว รันทุกเดือน</div></div>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/cdpcm-privilege-claim-birthday-real.png"><div class="shot-cap">ผลจริง — claim Done + คูปองออกให้อัตโนมัติ</div></div>
       </div>
     </div>
   </section>
