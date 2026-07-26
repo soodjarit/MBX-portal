@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>7 ประเภทแคมเปญ — สร้างทีละ Step | CDP-CM</title>
+<title>8 ประเภทแคมเปญ — สร้างทีละ Step | CDP-CM</title>
 <style>
   :root{
     --charcoal:#1E2A28;
@@ -89,6 +89,10 @@
   .kpi-value{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:#fff;}
   .kpi-value small{font-size:14px;font-weight:400;color:#B9C2C8;margin-left:2px;}
 
+  .cta-button{display:inline-flex;align-items:center;gap:10px;background:var(--copper);color:#fff;font-weight:700;font-size:14px;padding:13px 22px;border-radius:12px;text-decoration:none;margin-top:10px;}
+  .cta-button:hover{background:var(--copper-dark);}
+  .cta-button .cta-arrow{font-size:18px;}
+
   .footer-tag{position:absolute;bottom:24px;left:64px;font-size:12px;color:var(--muted);letter-spacing:.5px;}
   .page-num{position:absolute;bottom:24px;right:64px;font-size:12px;color:var(--muted);}
 
@@ -117,8 +121,8 @@
   <section class="slide dark active" id="slide-0">
     <div class="stone-badge">CC</div>
     <div class="eyebrow">MBX Group · Odoo 19 · Campaign &amp; Data Platform</div>
-    <div class="big-title">7 ประเภทแคมเปญ<br>สร้างทีละ Step</div>
-    <div class="big-sub">ตั้งแต่ Welcome ถึง Top Spender — วิธีเลือก Target ที่ต่างกันของแต่ละแบบ พร้อมตัวอย่างจริงจากแคมเปญที่รันอยู่ในระบบตอนนี้</div>
+    <div class="big-title">8 ประเภทแคมเปญ<br>สร้างทีละ Step</div>
+    <div class="big-sub">ตั้งแต่ Welcome ถึง RFM Segment Targeting — วิธีเลือก Target ที่ต่างกันของแต่ละแบบ พร้อมตัวอย่างจริงจากแคมเปญที่รันอยู่ในระบบตอนนี้</div>
     <div class="stamp">CDP-CM · mx_campaign v19.0.1.0.7 · ข้อมูลจริงจาก production (odoo19-mbxai) ณ วันที่จัดทำ</div>
   </section>
 
@@ -141,13 +145,14 @@
       <tr><td>5</td><td>Inactive Member</td><td><span class="pill-ok">พร้อมใช้</span></td><td>Segment สำเร็จรูป "Inactive Member"</td></tr>
       <tr><td>6</td><td>Active Member</td><td><span class="pill-ok">พร้อมใช้</span></td><td>Segment สำเร็จรูป "Active Member"</td></tr>
       <tr><td>7</td><td>Top Spender</td><td><span class="pill-ok">พร้อมใช้</span></td><td>Segment สำเร็จรูป "Top Spender" — Top 50</td></tr>
+      <tr><td>8</td><td>RFM Segment Targeting</td><td><span class="pill-ok">พร้อมใช้</span></td><td>เลือกจาก RFM Segment dropdown (เชื่อม MX-RFM)</td></tr>
     </table>
     <div class="note-box"><b>Add Targets มี 3 โหมดให้เลือกเสมอ:</b> Select Customers Manually (เลือกทีละคน) / From Segment - Domain Filter (กรองด้วยเงื่อนไข) / From CRM Leads (ดึงจาก Lead) — ถ้าเพิ่มเกิน 2,000 คนครั้งเดียว ระบบคิวเป็น Background Import Job ให้อัตโนมัติ</div>
   </section>
 
   <!-- SLIDE 2: Type 1 Welcome -->
   <section class="slide" id="slide-2">
-    <div class="type-pill">ประเภท 1 / 7</div>
+    <div class="type-pill">ประเภท 1 / 8</div>
     <div class="eyebrow">Welcome Campaign · สมาชิกใหม่</div>
     <h2 class="slide-title">Segment Filter ตามวันที่สมัคร</h2>
     <div class="two-col">
@@ -167,7 +172,7 @@
 
   <!-- SLIDE 3: Type 2 Birthday -->
   <section class="slide" id="slide-3">
-    <div class="type-pill">ประเภท 2 / 7</div>
+    <div class="type-pill">ประเภท 2 / 8</div>
     <div class="eyebrow">Birthday Campaign</div>
     <h2 class="slide-title">วันเกิดลูกค้าแต่ละคน — ระบบส่งคูปองให้เองอัตโนมัติ ไม่ต้องยิงแคมเปญราย event</h2>
     <div class="two-col">
@@ -190,7 +195,7 @@
 
   <!-- SLIDE 4: Type 3 Tier -->
   <section class="slide" id="slide-4">
-    <div class="type-pill">ประเภท 3 / 7</div>
+    <div class="type-pill">ประเภท 3 / 8</div>
     <div class="eyebrow">Tier Campaign · ระดับสมาชิก</div>
     <h2 class="slide-title">Segment Filter ตาม Pricelist Level</h2>
     <div class="two-col">
@@ -209,7 +214,7 @@
 
   <!-- SLIDE 5: Type 4 Personalize -->
   <section class="slide" id="slide-5">
-    <div class="type-pill">ประเภท 4 / 7</div>
+    <div class="type-pill">ประเภท 4 / 8</div>
     <div class="eyebrow">Personalize Campaign</div>
     <h2 class="slide-title">Select Customers Manually — ไม่มีกฎตายตัว เลือกทีละคน</h2>
     <div class="two-col">
@@ -228,7 +233,7 @@
 
   <!-- SLIDE 6: Types 5-7 trio -->
   <section class="slide" id="slide-6">
-    <div class="type-pill">ประเภท 5-7 / 7</div>
+    <div class="type-pill">ประเภท 5-7 / 8</div>
     <div class="eyebrow">Inactive / Active / Top Spender — กลไกเดียวกันหมด</div>
     <h2 class="slide-title">Segment สำเร็จรูป 3 แบบ — เลือกจาก Dropdown ไม่ต้องเขียน Domain เอง</h2>
     <div class="case-box">
@@ -253,6 +258,33 @@
       </div>
     </div>
     <div class="note-box"><b>ปรับ window 90 วันได้จากซอร์สโค้ดเท่านั้น:</b> ตัวเลข "90 วัน" เป็นค่าคงที่ในโค้ด (<code>PURCHASE_ACTIVE_WINDOW_DAYS</code> ใน <code>res_partner.py</code>) เปลี่ยนได้แต่ต้องแก้โค้ด+อัปเกรดโมดูลใหม่ ไม่ใช่ค่าที่ปรับได้จากหน้าจอ</div>
+  </section>
+
+  <!-- SLIDE 6b: Type 8 RFM Segment Targeting -->
+  <section class="slide" id="slide-6b">
+    <div class="type-pill">ประเภท 8 / 8</div>
+    <div class="eyebrow">RFM Segment Targeting · เชื่อมกับ MX-RFM</div>
+    <h2 class="slide-title">เลือก Target จาก RFM Segment ที่คำนวณจากพฤติกรรมซื้อจริง</h2>
+    <div class="flow-bar">
+      <span class="flow-chip">New Customer Segment</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">เลือก RFM Segment dropdown</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">Apply RFM Segment</span><span class="flow-arrow">→</span>
+      <span class="flow-chip">ได้ target list จริงทันที</span>
+    </div>
+    <div class="two-col">
+      <div class="col-left">
+        <ul class="step-list">
+          <li><span class="step-num">1</span><span class="step-text">Configuration → Customer Segments → New — หัวข้อ "RFM Segment Shortcut" → เลือกจาก dropdown (ดึงจาก 8 segment ที่ active จริง ไม่ต้องพิมพ์เอง)</span></li>
+          <li><span class="step-num">2</span><span class="step-text">กด "Apply RFM Segment" — ระบบเขียน Filter Domain ให้อัตโนมัติ เช่น <code>[('rfm_segment','=','At Risk')]</code></span></li>
+          <li><span class="step-num">3</span><span class="step-text">"Matching Customers" คำนวณจำนวนลูกค้าจริงทันที — ตัวอย่าง "At Risk" ตรงกับ 70 คนจริงจาก MX-RFM</span></li>
+        </ul>
+        <div class="note-box"><b>ข้อควรระวัง:</b> ต้องสลับ "บริษัทที่ใช้งานอยู่" ให้ตรงกับเจ้าของฐานลูกค้านั้นก่อน (เช่น MBX Café) ไม่งั้น multi-company security จะกรองลูกค้าออกหมด ฟิลด์จะโชว์ 0 คนทั้งที่ filter ถูกต้อง</div>
+        <a class="cta-button" href="cdp-cm-rfm-atrisk-case-study.html" target="_blank" rel="noopener">ดูกรณีศึกษาเต็ม: RFM → Campaign (10 สไลด์) <span class="cta-arrow">→</span></a>
+      </div>
+      <div class="col-right">
+        <div class="shot-wrap"><img class="shot" src="assets/rfmcase-70-matched-customers.png"><div class="shot-cap">Matching Customers = 70 — ตรงกับข้อมูลจริงของ MX-RFM</div></div>
+      </div>
+    </div>
   </section>
 
   <!-- SLIDE 7: Reward restrict + Invite -->
@@ -314,15 +346,16 @@
       <tr style="color:#DDE3E0;"><td>ดึงลูกค้าเงียบหายกลับมา</td><td>5. Inactive Member</td></tr>
       <tr style="color:#DDE3E0;"><td>รักษาฐานลูกค้าที่ยังซื้ออยู่</td><td>6. Active Member</td></tr>
       <tr style="color:#DDE3E0;"><td>ดูแลลูกค้าจ่ายหนักเป็นพิเศษ</td><td>7. Top Spender</td></tr>
+      <tr style="color:#DDE3E0;"><td>ดึงกลับลูกค้าที่เคยมีมูลค่าสูงแต่เงียบไป (ตาม RFM จริง)</td><td>8. RFM Segment Targeting</td></tr>
     </table>
-    <div style="margin-top:20px;font-size:14.5px;color:#B9C2C8;">รายละเอียดเต็ม + screenshot ทุกขั้นตอน: คู่มือฉบับเต็ม CDP-CM บทที่ 02</div>
+    <div style="margin-top:20px;font-size:14.5px;color:#B9C2C8;">รายละเอียดเต็ม + screenshot ทุกขั้นตอน: คู่มือฉบับเต็ม CDP-CM บทที่ 02 · กรณีศึกษา RFM Segment Targeting แบบเต็ม</div>
   </section>
 
 </div></div>
 
 <div id="nav">
   <button onclick="go(-1)" aria-label="Previous slide">‹</button>
-  <span id="pagecount">1 / 10</span>
+  <span id="pagecount">1 / 11</span>
   <button onclick="go(1)" aria-label="Next slide">›</button>
 </div>
 
