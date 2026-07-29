@@ -93,6 +93,15 @@
   .cta-button:hover{background:var(--copper-dark);}
   .cta-button .cta-arrow{font-size:18px;}
 
+  /* Poster gallery */
+  .poster-grid{display:flex;gap:16px;flex:1;min-height:0;align-items:stretch;}
+  .poster-card{flex:1;display:flex;flex-direction:column;align-items:center;min-width:0;}
+  .poster-type-pill{font-size:10.5px;font-weight:700;color:#fff;background:var(--copper);padding:4px 10px;border-radius:99px;margin-bottom:8px;white-space:nowrap;text-align:center;}
+  .poster-type-pill.pill-gap{background:var(--teal);}
+  .poster-frame{width:100%;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:var(--card);border-radius:10px;padding:6px;box-shadow:0 4px 18px rgba(0,0,0,.14);}
+  .poster-frame img{max-width:100%;max-height:100%;border-radius:6px;cursor:zoom-in;object-fit:contain;}
+  .poster-cap{font-size:11px;color:var(--muted);margin-top:7px;text-align:center;line-height:1.32;}
+
   .footer-tag{position:absolute;bottom:24px;left:64px;font-size:12px;color:var(--muted);letter-spacing:.5px;}
   .page-num{position:absolute;bottom:24px;right:64px;font-size:12px;color:var(--muted);}
 
@@ -327,6 +336,58 @@
     <div class="note-box" style="background:rgba(255,255,255,.07);border-left:none;color:#DDE3E0;margin-top:14px;"><b>Pattern ที่เห็นจริงจาก 10 แคมเปญตัวอย่างล่าสุด:</b> claim rate กระจาย 16.7%-72.0% — แคมเปญกลุ่มสมาชิก loyalty (Women's Day, Queen's Birthday) claim สูง 67-72% ส่วนกลุ่มลูกค้าทั่วไปทาง email/SMS (Valentine, Songkran) claim แค่ 16-37%</div>
   </section>
 
+  <!-- SLIDE 8b: Real creative gallery, 5 matched types -->
+  <section class="slide" id="slide-8b">
+    <div class="eyebrow">ตัวอย่างจริงจากธุรกิจ · MX CAFE</div>
+    <h2 class="slide-title">Creative จริงที่ใช้กับแต่ละประเภทแคมเปญ</h2>
+    <div class="poster-grid">
+      <div class="poster-card">
+        <div class="poster-type-pill">1. Welcome</div>
+        <div class="poster-frame"><img src="assets/cdpcm-poster-welcome.jpg" alt="Welcome New Member Buy 1 Get 1 Free"></div>
+        <div class="poster-cap">New Member Buy 1 Get 1 Free</div>
+      </div>
+      <div class="poster-card">
+        <div class="poster-type-pill">2. Birthday</div>
+        <div class="poster-frame"><img src="assets/cdpcm-poster-birthday.jpg" alt="ฉลองวันเกิด แสนพิเศษ"></div>
+        <div class="poster-cap">เครื่องดื่มฟรี 1 แก้ว + เบเกอรี่ลด 50% เดือนเกิด</div>
+      </div>
+      <div class="poster-card">
+        <div class="poster-type-pill">3. Tier</div>
+        <div class="poster-frame"><img src="assets/cdpcm-poster-tier-upgrade.jpg" alt="Upgrade to Signature Tier"></div>
+        <div class="poster-cap">Upgrade เป็น Signature Tier ลด 15% ทุกออเดอร์</div>
+      </div>
+      <div class="poster-card">
+        <div class="poster-type-pill">5. Inactive Member</div>
+        <div class="poster-frame"><img src="assets/cdpcm-poster-winback.jpg" alt="We Miss You win-back"></div>
+        <div class="poster-cap">We Miss You — ลด 10% เครื่องดื่มเย็น</div>
+      </div>
+      <div class="poster-card">
+        <div class="poster-type-pill">7. Top Spender</div>
+        <div class="poster-frame"><img src="assets/cdpcm-poster-topspender.jpg" alt="MXCAFE Top Spender"></div>
+        <div class="poster-cap">สะสมยอดซื้อสูงสุด 3 อันดับ รับ Voucher เงินสด</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8c: Creative that don't map to a built-in type -->
+  <section class="slide" id="slide-8c">
+    <div class="eyebrow">ตัวอย่างจริงจากธุรกิจ · MX CAFE (ต่อ)</div>
+    <h2 class="slide-title">2 Creative นี้ยังไม่มี Segment สำเร็จรูปตรงในระบบ</h2>
+    <div class="poster-grid" style="flex:0 0 auto;height:440px;">
+      <div class="poster-card">
+        <div class="poster-type-pill pill-gap">แนะนำเพื่อน (Referral)</div>
+        <div class="poster-frame"><img src="assets/cdpcm-poster-referral.jpg" alt="แนะนำเพื่อน รับส่วนลด 20% ทั้งคู่"></div>
+        <div class="poster-cap">ต้องมี referral code + จับคู่ผู้แนะนำ/ผู้ถูกแนะนำ — คนละกลไกกับ Customer Segment</div>
+      </div>
+      <div class="poster-card">
+        <div class="poster-type-pill pill-gap">Limited Time Offer</div>
+        <div class="poster-frame"><img src="assets/cdpcm-poster-limited-signature.jpg" alt="Signature Coffee 99 บาท เดือนสิงหาคม"></div>
+        <div class="poster-cap">ลดราคาสินค้าตรง (ไม่ผูกลูกค้ารายคน) — ใกล้เคียง Personalize แต่จริงๆ เป็นโปรราคาสินค้า ไม่ใช่ targeting</div>
+      </div>
+    </div>
+    <div class="note-box" style="margin-top:16px;"><b>ถ้าจะทำจริง:</b> Referral ต้องพัฒนา field ผูก "ผู้แนะนำ" บน <code>res.partner</code> + logic ให้ reward ทั้ง 2 ฝั่งตอน confirm ออเดอร์แรกของผู้ถูกแนะนำ (ยังไม่มีในระบบตอนนี้) ส่วน Limited Time Offer ทำง่ายกว่า — ใช้ Pricelist Rule ตั้งช่วงเวลา ไม่ต้องผ่านระบบ Campaign เลย</div>
+  </section>
+
   <!-- SLIDE 9: Summary -->
   <section class="slide dark" id="slide-9">
     <div class="eyebrow">สรุปภาพรวม</div>
@@ -376,7 +437,7 @@
     if(e.key==='ArrowRight'||e.key===' ') go(1);
     if(e.key==='ArrowLeft') go(-1);
   });
-  document.querySelectorAll('.shot').forEach(img=>{
+  document.querySelectorAll('.shot, .poster-frame img').forEach(img=>{
     img.addEventListener('click', ()=>{
       document.getElementById('lightbox-img').src = img.src;
       document.getElementById('lightbox').classList.add('active');
