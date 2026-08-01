@@ -48,6 +48,11 @@
   .flow-chip{background:var(--ink);color:#fff;font-size:12.5px;padding:8px 14px;border-radius:20px;white-space:nowrap;font-weight:600;}
   .flow-arrow{color:var(--amber);font-size:16px;margin:0 6px;font-weight:700;}
 
+  .repo-group{background:var(--card);border-radius:14px;padding:12px 18px 14px;margin-bottom:6px;}
+  .repo-group-label{font-size:12.5px;font-weight:700;color:var(--indigo-dark);margin-bottom:10px;}
+  .repo-group-label .repo-owner{font-weight:600;color:var(--muted);}
+  .repo-cross-arrow{font-size:12px;color:var(--amber-dark);font-weight:700;margin:4px 0 8px 20px;}
+
   .two-col{display:flex;gap:32px;align-items:stretch;}
   .col-left{flex:1;}
   .col-right{flex:1;display:flex;flex-direction:column;gap:14px;justify-content:center;min-height:0;}
@@ -142,14 +147,26 @@
   <section class="slide" id="slide-1b">
     <div class="eyebrow">บทที่ 2 · ภาพรวม Flow ทั้งระบบ</div>
     <h2 class="slide-title">จากห้อง Lab ถึงมือทีมปลายทาง — ทั้งวงจร</h2>
-    <div class="flow-bar" style="flex-wrap:wrap;row-gap:10px;">
-      <div class="flow-chip">1. พัฒนาใน MX-DEV-LAB</div><div class="flow-arrow">→</div>
-      <div class="flow-chip">2. Merge เข้า main</div><div class="flow-arrow">→</div>
-      <div class="flow-chip">3. Push ไป repo upstream</div><div class="flow-arrow">→</div>
-      <div class="flow-chip">4. Branch delivery/* + README + Tag</div><div class="flow-arrow">→</div>
-      <div class="flow-chip">5. ทีมปลายทางดึงไปใช้</div>
+
+    <div class="repo-group">
+      <div class="repo-group-label">Repo: <code>MX-DEV-LAB</code> <span class="repo-owner">(เจ้าของ: soodjarit — ที่พัฒนาจริง)</span></div>
+      <div class="flow-bar" style="margin-bottom:0;">
+        <div class="flow-chip">1. พัฒนาใน MX-DEV-LAB</div><div class="flow-arrow">→</div>
+        <div class="flow-chip">2. Merge เข้า main</div>
+      </div>
     </div>
-    <div class="two-col" style="margin-top:20px;">
+    <div class="repo-cross-arrow">↓ push main ทั้งก้อน ข้าม repo</div>
+    <div class="repo-group">
+      <div class="repo-group-label">Repo: <code>odoo19-community-mbx</code> <span class="repo-owner">(เจ้าของ: whyrukter — กล่อง upstream + deploy source บน VPS จริง)</span></div>
+      <div class="flow-bar" style="margin-bottom:0;flex-wrap:wrap;row-gap:8px;">
+        <div class="flow-chip">3. Push ไป repo upstream</div><div class="flow-arrow">→</div>
+        <div class="flow-chip">4. Branch delivery/mx-ptj + README + Tag</div><div class="flow-arrow">→</div>
+        <div class="flow-chip">5. ทีมปลายทาง fetch เฉพาะ branch นี้</div>
+      </div>
+    </div>
+    <div class="repo-cross-arrow">↓ ทีมปลายทางเอาไปเก็บที่ repo ของตัวเอง (ไม่เกี่ยวกับ MBX แล้ว)</div>
+
+    <div class="two-col" style="margin-top:8px;">
       <div class="col-left compare-box light">
         <div class="cb-title">ก่อนเริ่มรอบใหม่ทุกครั้ง</div>
         <div class="cb-body">MBX จะอ่านก่อนว่าทีมปลายทางแก้อะไรไปบ้างจาก tag ล่าสุดที่เขาใช้ กันเขียนทับงานที่แก้ไปแล้ว</div>
@@ -159,7 +176,6 @@
         <div class="cb-body">ทำเฉพาะตอนถูกสั่งเท่านั้น ไม่อัตโนมัติ — ดึงมาเป็น branch ใหม่ก่อน รีวิวแล้วเลือก merge เฉพาะจุด ไม่ merge ทั้งดุ้น</div>
       </div>
     </div>
-    <div class="note-box"><b>หมายเหตุ:</b> repo ต้นทาง (<code>odoo19-community-mbx</code>) เป็น repo เดียวกับที่ MBX ใช้พัฒนาโมดูลอื่นให้ client รายอื่นด้วย — ทีมปลายทางใช้เฉพาะ branch <code>delivery/mx-ptj</code> ของตัวเองเท่านั้น (รายละเอียดวิธีดึงโค้ด → บทถัดไป)</div>
   </section>
 
   <!-- SLIDE 2: สิ่งที่ได้รับ -->
