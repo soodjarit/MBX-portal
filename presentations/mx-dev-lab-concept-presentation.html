@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>MX-DEV-LAB — วิธีที่เราพัฒนา ส่งมอบ และรับกลับ</title>
+<style>
+  :root{
+    --ink:#1E2233;
+    --ink-dark:#11131F;
+    --indigo:#5B4B9A;
+    --indigo-dark:#3D3268;
+    --amber:#3E7CB8;
+    --amber-dark:#2C5A87;
+    --stone:#E4E1ED;
+    --card:#EDEBF3;
+    --white:#FFFFFF;
+    --text:#20232E;
+    --muted:#5C6270;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#c7c8ce;font-family:Calibri,Arial,sans-serif;color:var(--text);}
+  #stage-wrap{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  #stage{position:relative;width:1280px;height:720px;background:var(--white);box-shadow:0 10px 40px rgba(0,0,0,.35);flex-shrink:0;}
+  .slide{position:absolute;top:0;left:0;width:1280px;height:720px;padding:56px 64px;display:none;flex-direction:column;overflow:hidden;background:var(--white);}
+  .slide.active{display:flex;}
+  .slide.dark{background:var(--ink-dark);color:var(--stone);}
+
+  .eyebrow{font-size:15px;letter-spacing:2px;text-transform:uppercase;color:var(--amber-dark);font-weight:700;margin-bottom:8px;}
+  .dark .eyebrow{color:#9CC2EA;}
+  h1.title{font-size:40px;margin:0 0 6px 0;color:var(--ink);font-weight:700;font-family:Cambria,serif;}
+  .dark h1.title{color:var(--white);}
+  h2.slide-title{font-size:29px;margin:0 0 20px 0;color:var(--ink);font-weight:700;font-family:Cambria,serif;text-wrap:balance;}
+  .subtitle{font-size:18px;color:var(--muted);margin-bottom:0;}
+  .dark .subtitle{color:#B9C2C8;}
+
+  #slide-0{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;}
+  #slide-0 .big-title{font-size:50px;font-family:Cambria,serif;font-weight:700;color:var(--white);margin:0 0 18px 0;line-height:1.25;}
+  #slide-0 .big-sub{font-size:20px;color:#CBD3D8;max-width:860px;line-height:1.55;}
+  #slide-0 .stamp{position:absolute;bottom:56px;left:64px;font-size:14px;color:#8B97A0;letter-spacing:1px;}
+  #slide-0 .badge{position:absolute;top:56px;right:64px;width:92px;height:92px;border-radius:50%;background:var(--indigo);display:flex;align-items:center;justify-content:center;font-size:18px;color:white;font-weight:700;font-family:Cambria,serif;letter-spacing:1px;text-align:center;}
+
+  .case-box{background:var(--card);border-radius:16px;padding:22px 28px;margin-bottom:20px;display:flex;gap:20px;align-items:flex-start;}
+  .case-icon{flex-shrink:0;width:48px;height:48px;border-radius:50%;background:var(--indigo);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;font-family:Cambria,serif;}
+  .case-text-label{font-size:12.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--indigo-dark);font-weight:700;margin-bottom:4px;}
+  .case-text{font-size:16px;line-height:1.5;color:var(--text);}
+
+  .flow-bar{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin-bottom:20px;}
+  .flow-chip{background:var(--ink);color:#fff;font-size:12.5px;padding:8px 14px;border-radius:20px;white-space:nowrap;font-weight:600;}
+  .flow-arrow{color:var(--amber);font-size:16px;margin:0 6px;font-weight:700;}
+
+  .repo-group{background:var(--card);border-radius:14px;padding:12px 18px 14px;margin-bottom:6px;}
+  .repo-group-label{font-size:12.5px;font-weight:700;color:var(--indigo-dark);margin-bottom:10px;}
+  .repo-group-label .repo-owner{font-weight:600;color:var(--muted);}
+  .repo-cross-arrow{font-size:12px;color:var(--amber-dark);font-weight:700;margin:4px 0 8px 20px;}
+
+  .two-col{display:flex;gap:32px;align-items:stretch;}
+  .col-left{flex:1;}
+  .col-right{flex:1;display:flex;flex-direction:column;gap:14px;justify-content:center;min-height:0;}
+  .three-col{display:flex;gap:22px;align-items:stretch;flex:1;}
+  .three-col .col{flex:1;}
+
+  .step-list{list-style:none;margin:0;padding:0;}
+  .step-list li{display:flex;gap:13px;margin-bottom:12px;align-items:flex-start;}
+  .step-num{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--amber);color:#fff;font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .step-text{font-size:14.5px;line-height:1.48;padding-top:2px;}
+
+  .note-box{background:#EFEBF6;border-left:4px solid var(--amber);border-radius:8px;padding:14px 18px;font-size:13.5px;line-height:1.48;color:#332E45;margin-top:8px;}
+  .note-box b{color:var(--amber-dark);}
+  .warn-box{background:#F7ECE3;border-left:4px solid #B5502C;border-radius:8px;padding:14px 18px;font-size:13.5px;line-height:1.48;color:#5A2E18;margin-top:8px;}
+  .warn-box b{color:#8C3A1D;}
+
+  .data-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .data-table th{text-align:left;padding:7px 10px;background:var(--card);color:var(--indigo-dark);font-size:11px;letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--stone);}
+  .data-table td{padding:7px 10px;border-bottom:1px solid var(--stone);vertical-align:top;}
+  .data-table tr:last-child td{border-bottom:none;}
+
+  .compare-box{flex:1;border-radius:14px;padding:20px;}
+  .compare-box.light{background:var(--card);}
+  .compare-box.dark-box{background:rgba(255,255,255,.08);}
+  .compare-box .cb-title{font-weight:700;margin-bottom:8px;}
+  .compare-box.light .cb-title{color:var(--indigo-dark);}
+  .compare-box.dark-box .cb-title{color:#9CC2EA;}
+  .compare-box .cb-body{font-size:14px;line-height:1.6;}
+  .compare-box.dark-box .cb-body{color:#DDE3E0;}
+
+  .footer-tag{position:absolute;bottom:24px;left:64px;font-size:12px;color:var(--muted);letter-spacing:.5px;}
+  .page-num{position:absolute;bottom:24px;right:64px;font-size:12px;color:var(--muted);}
+
+  .code-block{background:var(--ink-dark);color:#D7DCE1;border-radius:12px;padding:18px 22px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.65;overflow-x:auto;white-space:pre;}
+  .code-block .cm{color:#7C8896;}
+
+  .badge-row{display:flex;gap:14px;margin-top:6px;}
+  .sev-card{flex:1;border-radius:12px;padding:14px 16px;color:#fff;}
+  .sev-card .sev-name{font-weight:700;font-size:14px;margin-bottom:4px;}
+  .sev-card .sev-desc{font-size:12.5px;line-height:1.4;opacity:.92;}
+  .sev-blocker{background:#B5302C;}
+  .sev-major{background:#C1791E;}
+  .sev-minor{background:#5C6270;}
+
+  #nav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;z-index:50;background:rgba(0,0,0,.55);padding:8px 16px;border-radius:24px;}
+  #nav button,#nav a.nav-home{background:var(--amber);color:#fff;border:none;border-radius:50%;width:34px;height:34px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}
+  #nav button:hover,#nav a.nav-home:hover{background:var(--amber-dark);}
+  #nav button:focus-visible,#nav a.nav-home:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+  #nav span{color:#fff;font-size:13px;min-width:50px;text-align:center;}
+
+  @media print{
+    #nav{display:none;}
+    #stage-wrap{width:auto;height:auto;overflow:visible;background:none;}
+    #stage{box-shadow:none;}
+    .slide{position:relative;display:block !important;page-break-after:always;}
+  }
+</style>
+</head>
+<body>
+<div id="stage-wrap"><div id="stage">
+
+  <!-- SLIDE 0: Title -->
+  <section class="slide dark active" id="slide-0">
+    <div class="badge">MX-DEV<br>-LAB</div>
+    <div class="eyebrow">MBX Group · R&amp;D Model · เอกสารอ้างอิงกลาง</div>
+    <div class="big-title">MX-DEV-LAB<br>วิธีที่เราพัฒนา ส่งมอบ และรับกลับ</div>
+    <div class="big-sub">ภาพรวมโมเดลการทำงานของ MBX สำหรับทุกฝั่งที่ทำงานร่วมกับเรา — ไม่ว่าจะเป็นทีมที่รับโค้ดไปดูแลต่อ หรือทีมที่ dev คู่ขนานกับเราและต้องแลกเปลี่ยนงานกัน อธิบายจากมุมมองของอีกฝั่ง: เราส่งอะไรให้ยังไง และเรารับกลับยังไง</div>
+    <div class="stamp">เอกสารอ้างอิงกลาง (ไม่ผูกกับ project เดียว) · อัปเดต 1 ส.ค. 2026</div>
+  </section>
+
+  <!-- SLIDE 1: บริบท -->
+  <section class="slide" id="slide-1">
+    <div class="eyebrow">บทที่ 1 · บริบท</div>
+    <h2 class="slide-title">MX-DEV-LAB คือห้อง Lab กลางที่ MBX พัฒนาทุก Project</h2>
+    <div class="case-box">
+      <div class="case-icon">L</div>
+      <div>
+        <div class="case-text-label">MX-DEV-LAB คืออะไร</div>
+        <div class="case-text">Repo กลางที่ MBX ใช้พัฒนาโมดูล Odoo ของทุก project พร้อมกัน — แยกเก็บเป็น branch ต่อ project ชัดเจน ไม่ปนกัน แต่ละ project ทดสอบเสร็จแล้วค่อยแลกเปลี่ยนงานกับอีกฝั่งตามบทบาทที่ตกลงกันไว้</div>
+      </div>
+    </div>
+    <div class="flow-bar">
+      <div class="flow-chip">พัฒนาใน MX-DEV-LAB</div><div class="flow-arrow">→</div>
+      <div class="flow-chip">ทดสอบภายใน</div><div class="flow-arrow">→</div>
+      <div class="flow-chip">แลกเปลี่ยนงานตามบทบาท (ส่ง / รับ)</div><div class="flow-arrow">→</div>
+      <div class="flow-chip">แต่ละฝั่งทำงานต่อได้อิสระ</div>
+    </div>
+    <div class="note-box"><b>ทำไมต้องรู้ตรงนี้ก่อน:</b> เอกสารนี้ไม่ผูกกับ project ใด project หนึ่ง — ใช้ concept เดียวกันอธิบายได้ทั้ง "ทีมที่รับโค้ดจากเราไปดูแลต่อ" และ "ทีมที่ dev คู่ขนานกับเราแล้วต้องแลกเปลี่ยนงานสองทาง" ต่างกันแค่ว่าใช้กลไก "ส่ง" หรือ "รับ" (หรือทั้งคู่) แบบไหน — ดูบทที่ 3–5</div>
+  </section>
+
+  <!-- SLIDE 2: ภาพรวม Flow -->
+  <section class="slide" id="slide-2">
+    <div class="eyebrow">บทที่ 2 · ภาพรวม Flow ทั้งระบบ</div>
+    <h2 class="slide-title">จากห้อง Lab ถึงมืออีกฝั่ง — ทั้งวงจร</h2>
+
+    <div class="repo-group">
+      <div class="repo-group-label">Repo: <code>MX-DEV-LAB</code> <span class="repo-owner">(ที่ MBX พัฒนาจริง — แยก branch ต่อ project)</span></div>
+      <div class="flow-bar" style="margin-bottom:0;">
+        <div class="flow-chip">1. พัฒนาใน MX-DEV-LAB</div><div class="flow-arrow">→</div>
+        <div class="flow-chip">2. Merge เข้า main</div>
+      </div>
+    </div>
+    <div class="repo-cross-arrow">↓ push main ทั้งก้อน ข้าม repo</div>
+    <div class="repo-group">
+      <div class="repo-group-label">Repo ต้นทางเดิม <span class="repo-owner">(กล่อง upstream ที่ใช้ส่งมอบ — เก็บ branch delivery/『project』แยกทีละ project)</span></div>
+      <div class="flow-bar" style="margin-bottom:0;flex-wrap:wrap;row-gap:8px;">
+        <div class="flow-chip">3. Push ไป repo upstream</div><div class="flow-arrow">→</div>
+        <div class="flow-chip">4. Branch delivery/『project』+ README + Tag</div><div class="flow-arrow">→</div>
+        <div class="flow-chip">5. อีกฝั่ง fetch เฉพาะ branch นี้</div>
+      </div>
+    </div>
+    <div class="repo-cross-arrow">↓ อีกฝั่งเอาไปเก็บ/ดูแลต่อในระบบของตัวเอง</div>
+
+    <div class="two-col" style="margin-top:8px;">
+      <div class="col-left compare-box light">
+        <div class="cb-title">ก่อนเริ่ม dev รอบใหม่ทุกครั้ง</div>
+        <div class="cb-body">MBX จะเช็คก่อนว่าอีกฝั่งแก้อะไรไปบ้างจาก tag ล่าสุดที่เขาใช้ (หรือดึงมารีวิวตรงๆ ถ้าอีกฝั่งยัง dev คู่ขนาน) กันเขียนทับงานที่แก้ไปแล้ว</div>
+      </div>
+      <div class="col-right compare-box light">
+        <div class="cb-title">"รับ" ไม่เคยอัตโนมัติ</div>
+        <div class="cb-body">ทุกครั้งที่ดึงกลับ ต้องเปิดเป็น branch ใหม่ก่อน รีวิวแล้วเลือก merge เฉพาะจุด ไม่ merge ทั้งดุ้น — รายละเอียด 2 รูปแบบ → บทที่ 4</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: ส่ง -->
+  <section class="slide" id="slide-3">
+    <div class="eyebrow">บทที่ 3 · "ส่ง" — เราส่งโค้ดให้อีกฝั่งยังไง</div>
+    <h2 class="slide-title">ดึงจาก Branch เดียว — อย่าไปยุ่งกับ Branch อื่น</h2>
+    <div class="code-block"><span class="cm"># Branch ของ project ตัวเองเท่านั้น</span>
+git fetch origin delivery/『project』
+git checkout delivery/『project』
+
+<span class="cm"># README.md ที่ root ของ branch มีรายละเอียดครบ</span>
+<span class="cm"># (module version, ขั้นตอน UAT, ข้อจำกัดที่รู้อยู่แล้ว)</span></div>
+    <div class="warn-box"><b>สำคัญ:</b> Repo ต้นทางเป็น repo ที่ MBX ใช้พัฒนาโมดูลอื่นให้ project อื่นด้วย จะเห็น branch อื่นที่ไม่เกี่ยวกับ project ของคุณปนอยู่ — <b>ใช้เฉพาะ branch <code>delivery/『project』</code> ของตัวเองเท่านั้น</b></div>
+    <div class="two-col" style="margin-top:16px;">
+      <div class="col-left compare-box light">
+        <div class="cb-title">Tag ทุกรอบส่งมอบ</div>
+        <div class="cb-body">รูปแบบ <code>mxdevlab/『branch』/v『version』</code> — <code>git tag -l "mxdevlab/*"</code> เห็นทุกรอบที่เคยส่งมา</div>
+      </div>
+      <div class="col-right compare-box light">
+        <div class="cb-title">เลขเวอร์ชัน 19.0.A.B.C</div>
+        <div class="cb-body">MBX ขยับหลัก <b>B</b> (ฟีเจอร์ใหม่) — ถ้าอีกฝั่งแก้ต่อเอง ให้ขยับหลัก <b>C</b> (hotfix) กันเลขชนกัน</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: รับ -->
+  <section class="slide" id="slide-4">
+    <div class="eyebrow">บทที่ 4 · "รับ" — เรารับโค้ดกลับจากอีกฝั่งยังไง</div>
+    <h2 class="slide-title">2 รูปแบบ ต่างกันที่ "อีกฝั่งยัง dev คู่ขนานอยู่หรือเปล่า"</h2>
+    <div class="three-col">
+      <div class="col compare-box light">
+        <div class="cb-title">Round-trip (ทั่วไป)</div>
+        <div class="cb-body">ใช้เมื่ออีกฝั่งรับโค้ดไปดูแลต่อเองแล้ว ไม่ได้ dev คู่ขนานกับเราต่อเนื่อง — ดึงกลับ<b>เฉพาะตอนถูกสั่งเท่านั้น</b> ไม่บ่อย</div>
+      </div>
+      <div class="col compare-box light">
+        <div class="cb-title">Pull-before-dev (กรณีพิเศษ)</div>
+        <div class="cb-body">ใช้เมื่ออีกฝั่งยัง dev คู่ขนานอยู่จริงบน repo ต้นทางเดิม — ดึงมา<b>ก่อนเริ่ม dev รอบใหม่ทุกครั้ง</b> ของ project นั้น (ไม่ใช่รอสั่ง)</div>
+      </div>
+      <div class="col compare-box light">
+        <div class="cb-title">เหมือนกันตรงไหน</div>
+        <div class="cb-body">ทั้งสองแบบ: เปิด branch ใหม่ตั้งชื่อตามวันที่ดึง → รีวิว diff เฉพาะ path ที่เกี่ยวข้อง → เลือก merge เฉพาะจุด <b>ไม่เคย merge ทั้งดุ้นแบบไม่รีวิว</b></div>
+      </div>
+    </div>
+    <div class="code-block" style="margin-top:14px;">repo ต้นทาง 『branch ของอีกฝั่ง』
+   ──fetch──▶ เปิดเป็น branch ใหม่ใน MX-DEV-LAB ตั้งชื่อตามวันที่ดึง
+   ──รีวิว diff เฉพาะ path ที่เกี่ยวข้อง──▶ เลือก merge เฉพาะจุด เข้า branch project เดิม</div>
+  </section>
+
+  <!-- SLIDE 5: ตัวอย่างจริง MXP -->
+  <section class="slide" id="slide-5">
+    <div class="eyebrow">บทที่ 5 · ตัวอย่างจริง — Pull-before-dev ของ MXP</div>
+    <h2 class="slide-title">ทำไม "รีวิวก่อน merge เสมอ" ไม่ใช่แค่กฎเฉยๆ</h2>
+    <ul class="step-list">
+      <li><span class="step-num">1</span><span class="step-text">MXP เป็น project เดียวที่อีกฝั่งยัง dev คู่ขนานบน branch <code>dev</code> ของ repo ต้นทางจริง — ตกลงกันให้ pull ก่อนเริ่ม dev รอบใหม่ทุกครั้ง</span></li>
+      <li><span class="step-num">2</span><span class="step-text">ลองรันรอบแรก: fetch <code>dev</code> → เปิด branch รีวิว → diff เฉพาะ path ของ MXP (27 ไฟล์, +1,113/-104 บรรทัด)</span></li>
+      <li><span class="step-num">3</span><span class="step-text">ส่วนใหญ่ปลอดภัยดี (ฟีเจอร์ใหม่ "Membership Dashboard", โมเดล+migration ใหม่)</span></li>
+      <li><span class="step-num">4</span><span class="step-text"><b>แต่เจอจริง:</b> มี 5 ไฟล์ที่ถูกลบ field ป้องกันข้อมูลข้ามบริษัท (<code>company_id</code>) พร้อมไฟล์ security rule ที่คู่กัน โดยไม่มี migration รองรับ</span></li>
+      <li><span class="step-num">5</span><span class="step-text">ผลจากการ "รีวิวก่อน merge เสมอ": จับได้ก่อน merge เข้าโค้ดจริง — แจ้งกลับไปเช็คกับอีกฝั่งก่อน ไม่ merge ส่วนที่มีความเสี่ยงจนกว่าจะได้คำตอบ</span></li>
+    </ul>
+    <div class="warn-box"><b>ทำไมเรื่องนี้ถึงสำคัญ:</b> ถ้า merge ทั้งดุ้นโดยไม่รีวิว การเปลี่ยนแปลงแบบนี้จะหลุดเข้า production ทันที — นี่คือเหตุผลที่กฎ "ห้าม merge ทั้งดุ้น" ในบทที่ 4 ไม่ใช่ความระมัดระวังเกินเหตุ แต่เจอปัญหาจริงตั้งแต่รอบทดลองรอบแรก</div>
+  </section>
+
+  <!-- SLIDE 6: หลักการสำคัญ -->
+  <section class="slide" id="slide-6">
+    <div class="eyebrow">บทที่ 6 · หลักการสำคัญ</div>
+    <h2 class="slide-title">3 ข้อที่ใช้เหมือนกันทั้งฝั่ง "ส่ง" และ "รับ"</h2>
+    <div class="three-col">
+      <div class="col compare-box light">
+        <div class="cb-title">แยก branch ตาม project เสมอ</div>
+        <div class="cb-body">ไม่ว่าจะส่งหรือรับ ไม่เคยรวม sync ผ่าน main เดียว — กันปัญหา repo ปนหลาย project/client เข้าด้วยกัน</div>
+      </div>
+      <div class="col compare-box light">
+        <div class="cb-title">รีวิวก่อน merge เสมอ</div>
+        <div class="cb-body">ทั้ง Round-trip และ Pull-before-dev ไม่มีระบบไหนอัตโนมัติ ต้องเปิด branch แยกรีวิวก่อนทุกครั้ง (ดูตัวอย่างจริงบทที่ 5)</div>
+      </div>
+      <div class="col compare-box light">
+        <div class="cb-title">สื่อสารชัดเจนเสมอ</div>
+        <div class="cb-body">ชื่อ branch/repo/tag ต้องตรงกันทั้งสองฝั่ง — git แก้ปัญหา "branch ไหนของใคร" เองไม่ได้ ต้องมีคนยืนยันนอกระบบเสมอ</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7: ปิดท้าย -->
+  <section class="slide dark" id="slide-7">
+    <div class="eyebrow">สรุป</div>
+    <h2 class="slide-title" style="color:#fff;">สิ่งที่ต้องจำ 3 ข้อ</h2>
+    <ul class="step-list">
+      <li><span class="step-num">1</span><span class="step-text" style="color:#DDE3E0;"><b>ส่ง</b> = branch <code>delivery/『project』</code> + README + tag เท่านั้น — branch อื่นในนั้นไม่เกี่ยวข้อง</span></li>
+      <li><span class="step-num">2</span><span class="step-text" style="color:#DDE3E0;"><b>รับ</b> = ไม่เคย merge ทั้งดุ้น รีวิวก่อนเสมอ ไม่ว่าจะเป็น Round-trip (ตามสั่ง) หรือ Pull-before-dev (ก่อน dev ทุกรอบ)</span></li>
+      <li><span class="step-num">3</span><span class="step-text" style="color:#DDE3E0;">ทุกอย่างแยกตาม project ชัดเจนเสมอ แม้ repo ต้นทางจะเป็น shared repo ที่มีหลาย project ปนกันก็ตาม</span></li>
+    </ul>
+    <div style="margin-top:24px;font-size:14px;color:#9AA5AC;">เอกสารอ้างอิงกลาง ไม่ผูกกับ project เดียว — รายละเอียดเฉพาะแต่ละ project ดูใน README ของ branch delivery/『project』นั้นๆ</div>
+  </section>
+
+</div></div>
+
+<div id="nav">
+  <a class="nav-home" href="../index.html" aria-label="Back to portal home" title="Back to portal home"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 11.5L12 4l8 7.5M6 10v9a1 1 0 0 0 1 1h3v-6h4v6h3a1 1 0 0 0 1-1v-9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  <button onclick="go(-1)" aria-label="Previous slide">‹</button>
+  <span id="pagecount">1 / 8</span>
+  <button onclick="go(1)" aria-label="Next slide">›</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let idx = 0;
+  function render(){
+    slides.forEach((s,i)=>s.classList.toggle('active', i===idx));
+    document.getElementById('pagecount').textContent = (idx+1)+' / '+slides.length;
+  }
+  function go(d){
+    idx = Math.min(slides.length-1, Math.max(0, idx+d));
+    render();
+  }
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight'||e.key===' ') go(1);
+    if(e.key==='ArrowLeft') go(-1);
+  });
+  function scaleStage(){
+    const wrap = document.getElementById('stage-wrap');
+    const stage = document.getElementById('stage');
+    const scale = Math.min(wrap.clientWidth/1280, wrap.clientHeight/720);
+    stage.style.transform = 'scale('+scale+')';
+  }
+  window.addEventListener('resize', scaleStage);
+  scaleStage();
+  render();
+</script>
+</body>
+</html>
