@@ -93,9 +93,9 @@
   .sev-minor{background:#5C6270;}
 
   #nav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;z-index:50;background:rgba(0,0,0,.55);padding:8px 16px;border-radius:24px;}
-  #nav button{background:var(--amber);color:#fff;border:none;border-radius:50%;width:34px;height:34px;font-size:16px;cursor:pointer;}
-  #nav button:hover{background:var(--amber-dark);}
-  #nav button:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+  #nav button,#nav a.nav-home{background:var(--amber);color:#fff;border:none;border-radius:50%;width:34px;height:34px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}
+  #nav button:hover,#nav a.nav-home:hover{background:var(--amber-dark);}
+  #nav button:focus-visible,#nav a.nav-home:focus-visible{outline:2px solid #fff;outline-offset:2px;}
   #nav span{color:#fff;font-size:13px;min-width:50px;text-align:center;}
 
   @media print{
@@ -230,6 +230,7 @@ git checkout delivery/mx-ptj
 </div></div>
 
 <div id="nav">
+  <a class="nav-home" href="../index.html" aria-label="Back to portal home">⌂</a>
   <button onclick="go(-1)" aria-label="Previous slide">‹</button>
   <span id="pagecount">1 / 8</span>
   <button onclick="go(1)" aria-label="Next slide">›</button>
