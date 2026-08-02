@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>MX-PTJ — คู่มือใช้งานระบบบริหารโปรเจกต์</title>
+<style>
+  :root{
+    --ink:#16232B;
+    --ink-dark:#0D1519;
+    --teal:#2F8F86;
+    --teal-dark:#1F625B;
+    --amber:#D98F3E;
+    --amber-dark:#A96A28;
+    --stone:#DCEAE7;
+    --card:#E7F1EF;
+    --white:#FFFFFF;
+    --text:#1D2B2E;
+    --muted:#5C6E6C;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#c7c8ce;font-family:Calibri,Arial,sans-serif;color:var(--text);}
+  #stage-wrap{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  #stage{position:relative;width:1280px;height:720px;background:var(--white);box-shadow:0 10px 40px rgba(0,0,0,.35);flex-shrink:0;}
+  .slide{position:absolute;top:0;left:0;width:1280px;height:720px;padding:52px 64px;display:none;flex-direction:column;overflow:hidden;background:var(--white);}
+  .slide.active{display:flex;}
+  .slide.dark{background:var(--ink-dark);color:var(--stone);}
+
+  .eyebrow{font-size:15px;letter-spacing:2px;text-transform:uppercase;color:var(--teal-dark);font-weight:700;margin-bottom:8px;}
+  .dark .eyebrow{color:#7FC6BC;}
+  h1.title{font-size:40px;margin:0 0 6px 0;color:var(--ink);font-weight:700;font-family:Cambria,serif;}
+  .dark h1.title{color:var(--white);}
+  h2.slide-title{font-size:28px;margin:0 0 18px 0;color:var(--ink);font-weight:700;font-family:Cambria,serif;text-wrap:balance;}
+  .subtitle{font-size:18px;color:var(--muted);margin-bottom:0;}
+  .dark .subtitle{color:#B9C2C0;}
+
+  #slide-0{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;}
+  #slide-0 .big-title{font-size:46px;font-family:Cambria,serif;font-weight:700;color:var(--white);margin:0 0 16px 0;line-height:1.25;}
+  #slide-0 .big-sub{font-size:19px;color:#CBD8D5;max-width:840px;line-height:1.55;margin-bottom:22px;}
+  #slide-0 .stamp{position:absolute;bottom:52px;left:64px;font-size:14px;color:#7E8F8C;letter-spacing:1px;}
+  #slide-0 .badge{position:absolute;top:52px;right:64px;width:88px;height:88px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:17px;color:white;font-weight:700;font-family:Cambria,serif;letter-spacing:1px;text-align:center;}
+  .new-callout{background:rgba(217,143,62,.14);border:1.5px solid var(--amber);border-radius:14px;padding:18px 22px;max-width:760px;}
+  .new-callout .nc-tag{display:inline-block;background:var(--amber);color:#fff;font-size:11.5px;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+  .new-callout .nc-text{font-size:15px;line-height:1.55;color:#EDE2D3;}
+  .new-callout .nc-text b{color:#F3C787;}
+
+  .case-box{background:var(--card);border-radius:16px;padding:20px 26px;margin-bottom:18px;display:flex;gap:20px;align-items:flex-start;}
+  .case-icon{flex-shrink:0;width:46px;height:46px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:700;font-family:Cambria,serif;}
+  .case-text-label{font-size:12.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal-dark);font-weight:700;margin-bottom:4px;}
+  .case-text{font-size:15.5px;line-height:1.5;color:var(--text);}
+
+  .flow-bar{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin-bottom:18px;}
+  .flow-chip{background:var(--ink);color:#fff;font-size:12.5px;padding:8px 14px;border-radius:20px;white-space:nowrap;font-weight:600;}
+  .flow-arrow{color:var(--amber);font-size:16px;margin:0 6px;font-weight:700;}
+
+  .two-col{display:flex;gap:28px;align-items:stretch;}
+  .col-left{flex:1;}
+  .col-right{flex:1;display:flex;flex-direction:column;gap:14px;justify-content:center;min-height:0;}
+  .three-col{display:flex;gap:20px;align-items:stretch;flex:1;}
+  .three-col .col{flex:1;}
+
+  .step-list{list-style:none;margin:0;padding:0;}
+  .step-list li{display:flex;gap:13px;margin-bottom:11px;align-items:flex-start;}
+  .step-num{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:var(--amber);color:#fff;font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .step-text{font-size:14.5px;line-height:1.48;padding-top:2px;}
+
+  .note-box{background:#E7F1EF;border-left:4px solid var(--teal);border-radius:8px;padding:13px 18px;font-size:13.5px;line-height:1.48;color:#1B3B37;margin-top:8px;}
+  .note-box b{color:var(--teal-dark);}
+  .warn-box{background:#F7ECE3;border-left:4px solid var(--amber);border-radius:8px;padding:13px 18px;font-size:13.5px;line-height:1.48;color:#5A3E18;margin-top:8px;}
+  .warn-box b{color:var(--amber-dark);}
+
+  .data-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .data-table th{text-align:left;padding:7px 10px;background:var(--card);color:var(--teal-dark);font-size:11px;letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--stone);}
+  .data-table td{padding:7px 10px;border-bottom:1px solid var(--stone);vertical-align:top;}
+  .data-table tr:last-child td{border-bottom:none;}
+  .data-table td.hl{color:var(--amber-dark);font-weight:700;}
+  .data-table td.dim{color:#9AA6A4;}
+
+  .compare-box{flex:1;border-radius:14px;padding:18px 20px;}
+  .compare-box.light{background:var(--card);}
+  .compare-box.dark-box{background:rgba(255,255,255,.08);}
+  .compare-box .cb-title{font-weight:700;margin-bottom:8px;font-size:15px;}
+  .compare-box.light .cb-title{color:var(--teal-dark);}
+  .compare-box.dark-box .cb-title{color:#7FC6BC;}
+  .compare-box .cb-body{font-size:13.5px;line-height:1.55;}
+  .compare-box.dark-box .cb-body{color:#DDE3E0;}
+
+  .footer-tag{position:absolute;bottom:22px;left:64px;font-size:12px;color:var(--muted);letter-spacing:.5px;}
+  .page-num{position:absolute;bottom:22px;right:64px;font-size:12px;color:var(--muted);}
+
+  .code-block{background:var(--ink-dark);color:#D7DCE1;border-radius:12px;padding:16px 20px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.65;overflow-x:auto;white-space:pre;}
+  .code-block .cm{color:#7C8896;}
+
+  .badge-pill{display:inline-block;background:var(--teal);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;letter-spacing:.5px;}
+  .badge-pill.new{background:var(--amber);}
+
+  #nav{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;z-index:50;background:rgba(0,0,0,.55);padding:8px 16px;border-radius:24px;}
+  #nav button,#nav a.nav-home{background:var(--teal);color:#fff;border:none;border-radius:50%;width:34px;height:34px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}
+  #nav button:hover,#nav a.nav-home:hover{background:var(--teal-dark);}
+  #nav button:focus-visible,#nav a.nav-home:focus-visible{outline:2px solid #fff;outline-offset:2px;}
+  #nav span{color:#fff;font-size:13px;min-width:50px;text-align:center;}
+
+  @media print{
+    #nav{display:none;}
+    #stage-wrap{width:auto;height:auto;overflow:visible;background:none;}
+    #stage{box-shadow:none;}
+    .slide{position:relative;display:block !important;page-break-after:always;}
+  }
+</style>
+</head>
+<body>
+<div id="stage-wrap"><div id="stage">
+
+  <!-- SLIDE 0: Title -->
+  <section class="slide dark active" id="slide-0">
+    <div class="badge">MX<br>-PTJ</div>
+    <div class="eyebrow">MBX Group · Internal PM Tool · คู่มือใช้งาน</div>
+    <div class="big-title">MX-PTJ<br>คู่มือใช้งานระบบบริหารโปรเจกต์</div>
+    <div class="big-sub">วิธีสร้าง Project ใหม่, ใช้ Template สร้าง Sub-task อัตโนมัติ, และฟีเจอร์ทั้งหมดที่ทีมพัฒนาเพิ่มให้ — ตั้งแต่การจัดวันที่, Gantt Chart, Dashboard จนถึงแจ้งเตือนผ่าน Telegram</div>
+    <div class="new-callout">
+      <div class="nc-tag">🆕 อัปเดตล่าสุด · 2 ส.ค. 2026</div>
+      <div class="nc-text">ปุ่ม <b>🔄 Recalculate Dates</b> เลือกได้แล้วว่าจะ<b>เริ่มคำนวณจาก Sub-task ไหน</b> — sub-task ก่อนหน้าและที่ Done ไปแล้วจะไม่ถูกแตะวันที่เลย ไม่ต้อง recalculate ทั้งก้อนทุกครั้งเหมือนเดิม (ดูรายละเอียด+ตัวอย่างจริง บทที่ 5)</div>
+    </div>
+    <div class="stamp">Module ptj_project v19.0.1.37.0 · อัปเดต 2 ส.ค. 2026</div>
+  </section>
+
+  <!-- SLIDE 1: ภาพรวม -->
+  <section class="slide" id="slide-1">
+    <div class="eyebrow">บทที่ 1 · ภาพรวมระบบ</div>
+    <h2 class="slide-title">MX-PTJ คือระบบบริหารโปรเจกต์ภายในของ MBX</h2>
+    <div class="case-box">
+      <div class="case-icon">P</div>
+      <div>
+        <div class="case-text-label">คืออะไร</div>
+        <div class="case-text">ต่อยอดจาก Odoo Project app มาตรฐาน เพิ่ม scheduling อัตโนมัติ, template สร้าง sub-task, dashboard 3 แบบ และแจ้งเตือนผ่าน Telegram — ใช้ track งานทุกทีมใน MBX ข้าม company ได้ (federated ไม่ silo) เพราะเป็นเครื่องมือ PM ภายใน ไม่ใช่ระบบแยกข้อมูลลูกค้า</div>
+      </div>
+    </div>
+    <div class="flow-bar">
+      <div class="flow-chip">1. สร้าง Project</div><div class="flow-arrow">→</div>
+      <div class="flow-chip">2. สร้าง Task 3 ระดับ</div><div class="flow-arrow">→</div>
+      <div class="flow-chip">3. Apply Template สร้าง Sub-task</div><div class="flow-arrow">→</div>
+      <div class="flow-chip">4. ติดตามผ่าน Gantt / Dashboard / Telegram</div>
+    </div>
+    <div class="note-box"><b>เอกสารนี้ครอบคลุมอะไรบ้าง:</b> วิธีสร้าง Project (บทที่ 2) → โครงสร้าง Task (บทที่ 3) → ใช้ Template (บทที่ 4) → ฟีเจอร์จัดวันที่ทั้งหมดรวมของใหม่ล่าสุด (บทที่ 5–6) → Dependency/Conflict (บทที่ 7) → Gantt (บทที่ 8) → Dashboard (บทที่ 9) → Telegram Bot (บทที่ 10)</div>
+  </section>
+
+  <!-- SLIDE 2: สร้าง Project -->
+  <section class="slide" id="slide-2">
+    <div class="eyebrow">บทที่ 2 · เริ่มต้นใช้งาน</div>
+    <h2 class="slide-title">สร้าง Project ใหม่ — เริ่มต้นยังไง</h2>
+    <ul class="step-list">
+      <li><span class="step-num">1</span><span class="step-text">เมนู <b>Project → Projects → New</b> ตั้งชื่อ Project ตามงานจริง</span></li>
+      <li><span class="step-num">2</span><span class="step-text">ตั้ง <b>Project Code</b> (เช่น <code>MXP</code>, <code>TTT</code>) — ถ้าไม่ตั้งเอง ระบบ auto-gen จากชื่อให้ โค้ดนี้เป็น prefix ของ Task ID ทุกตัวในโปรเจกต์ (เช่น <code>MXP-0552</code>) ทำให้อ้างอิงใน Telegram อ่านง่าย ไม่ใช้ internal ID ของ Odoo ตรงๆ</span></li>
+      <li><span class="step-num">3</span><span class="step-text">Company scope เป็นแบบ <b>federated</b> — ทีมเห็น task ข้าม company ได้ตาม requirement งาน PM ภายใน ไม่ต้องตั้งค่า silo แยกทีละบริษัท</span></li>
+      <li><span class="step-num">4</span><span class="step-text">ปรับ Stage/Kanban ตามที่ทีมต้องการได้อิสระ — ระบบ sync stage อัตโนมัติตามสถานะ task (done/in progress/cancelled) ให้เองอยู่แล้ว</span></li>
+    </ul>
+    <div class="note-box"><b>Tips:</b> ตั้ง Project Code ให้สั้นและจำง่ายตั้งแต่ต้น เพราะจะติดไปกับทุก Task ID ที่สร้างในโปรเจกต์นี้ตลอดไป</div>
+  </section>
+
+  <!-- SLIDE 3: โครงสร้าง Task -->
+  <section class="slide" id="slide-3">
+    <div class="eyebrow">บทที่ 3 · โครงสร้าง Task</div>
+    <h2 class="slide-title">Task แบ่งเป็น 3 ระดับ: Phase → Main → Internal</h2>
+    <div class="three-col">
+      <div class="col compare-box light">
+        <div class="cb-title">L1 · Phase</div>
+        <div class="cb-body">ระดับใหญ่สุด ไม่มี parent — แบ่งโปรเจกต์เป็นช่วงงานหลัก เช่น "Sprint 1", "Phase Design"</div>
+      </div>
+      <div class="col compare-box light">
+        <div class="cb-title">L2 · Main</div>
+        <div class="cb-body">งานหลักภายใต้ Phase — ระดับที่มักใช้ Apply Template สร้าง sub-task ย่อยลงไปอีกชั้น</div>
+      </div>
+      <div class="col compare-box light">
+        <div class="cb-title">L3 · Internal</div>
+        <div class="cb-body">Sub-task ย่อยที่สุด งานจริงที่ assignee ทำต่อวัน — planned hours rollup ขึ้นไปทุกชั้นอัตโนมัติ</div>
+      </div>
+    </div>
+    <div class="case-box" style="margin-top:18px;">
+      <div class="case-icon">H</div>
+      <div>
+        <div class="case-text-label">H-task Breadcrumb</div>
+        <div class="case-text">ทุก task แสดงสายพันธุ์ของตัวเองใต้ชื่อเสมอ ทั้งบน Task Form และท้าย Kanban card ไม่ต้องไล่คลิกดู parent เอง — format: <code>Requirement brief to team / ทดสอบสาม / Project</code></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: Apply Template -->
+  <section class="slide" id="slide-4">
+    <div class="eyebrow">บทที่ 4 · ใช้ Template สร้าง Sub-task อัตโนมัติ</div>
+    <h2 class="slide-title">Apply Template — สร้าง Sub-task พร้อม Dependency ในคลิกเดียว</h2>
+    <ul class="step-list">
+      <li><span class="step-num">1</span><span class="step-text">เปิด task ระดับ Main หรือ Phase → กด <b>➕ Apply Template</b> บน header</span></li>
+      <li><span class="step-num">2</span><span class="step-text">เลือก <b>Template Set</b> ที่ต้องการ + ใส่วันที่เริ่มโปรเจกต์</span></li>
+      <li><span class="step-num">3</span><span class="step-text">ระบบสร้าง sub-task ทั้งหมดให้ครบ พร้อม <b>dependency chain</b> ต่อกันตามลำดับ และคำนวณวันที่ตาม working days (ข้ามเสาร์-อาทิตย์อัตโนมัติ)</span></li>
+    </ul>
+    <div class="note-box" style="margin-bottom:12px;"><b>ตัวอย่างจริงจากระบบ</b> — Template Set "Standard Feature Dev" (Design → Code → Test), เริ่ม 3 ส.ค. 2026:</div>
+    <table class="data-table">
+      <tr><th>Sub-task</th><th>Role</th><th>Duration</th><th>Depends On</th><th>วันที่คำนวณได้</th></tr>
+      <tr><td>1. UI Design</td><td>Designer</td><td>1 working day</td><td class="dim">— (ตัวแรก)</td><td>3 ส.ค.</td></tr>
+      <tr><td>2. Frontend Implementation</td><td>Frontend Dev</td><td>1 working day</td><td>UI Design</td><td>4 ส.ค.</td></tr>
+      <tr><td>3. Backend API</td><td>Backend Dev</td><td>1 working day</td><td>Frontend Implementation</td><td>5 ส.ค.</td></tr>
+      <tr><td>4. Unit Test &amp; QA</td><td>QA</td><td>1 working day</td><td>Backend API</td><td>6 ส.ค.</td></tr>
+    </table>
+    <div class="note-box">มี Template สำเร็จรูปให้แล้ว 3 แบบ: <b>Standard Feature Dev</b>, <b>Bug Fix</b>, <b>Sprint Phase Setup</b> — สร้าง/แก้ template เองได้ที่ <code>Configuration → Template Sets</code></div>
+  </section>
+
+  <!-- SLIDE 5: NEW FEATURE deep dive -->
+  <section class="slide" id="slide-5">
+    <div class="eyebrow">บทที่ 5 · <span class="badge-pill new">ฟีเจอร์ใหม่</span> อัปเดต 2 ส.ค. 2026</div>
+    <h2 class="slide-title">Recalculate Dates: เลือกเริ่มจาก Sub-task ไหนก็ได้</h2>
+    <div class="case-box">
+      <div class="case-icon">!</div>
+      <div>
+        <div class="case-text-label">ปัญหาเดิม</div>
+        <div class="case-text">ปุ่ม Recalculate Dates เดิม คำนวณ<b>ทุก sub-task ใหม่หมดทุกครั้ง</b> แม้บางตัวจะทำเสร็จไปแล้ว หรือทีมตกลงวันที่เดิมไว้แน่นอนแล้วก็ตาม — ต้องคอยระวังไม่ให้เผลอเขียนทับงานที่เสร็จแล้ว</div>
+      </div>
+    </div>
+    <ul class="step-list">
+      <li><span class="step-num">1</span><span class="step-text">กด <b>🔄 Recalculate Dates</b> เหมือนเดิม</span></li>
+      <li><span class="step-num">2</span><span class="step-text">เลือก dropdown <b>"เริ่มจาก Sub-task"</b> (ใหม่) — เว้นว่างไว้ = คำนวณทั้งหมดเหมือนเดิมทุกประการ</span></li>
+      <li><span class="step-num">3</span><span class="step-text">ใส่ New Project Start Date → sub-task ที่เลือกจะเริ่มนับจากวันนี้ตรงๆ ตัวที่อยู่<b>ก่อนจุดที่เลือกไม่ถูกแตะเลย</b> ส่วนตัวที่ <b>Done/Cancelled</b> ระหว่างทางก็ข้ามเช่นกัน (แต่ยังใช้วันที่จริงเป็นจุดอ้างอิงให้ตัวถัดไปคำนวณต่อถูกต้อง)</span></li>
+    </ul>
+    <div class="note-box" style="margin-bottom:8px;"><b>ตัวอย่างจริง (verified)</b> — เลือก "เริ่มจาก: Requirement brief to team" + New Start Date = 17 ส.ค.:</div>
+    <table class="data-table">
+      <tr><th>Sub-task</th><th>ก่อน</th><th>หลัง</th><th>หมายเหตุ</th></tr>
+      <tr><td>create requirement doc</td><td>3 ส.ค.</td><td class="dim">3 ส.ค. (ไม่เปลี่ยน)</td><td class="dim">ก่อนจุดเริ่ม</td></tr>
+      <tr><td>Requirement doc approval</td><td>4 ส.ค.</td><td class="dim">4 ส.ค. (ไม่เปลี่ยน)</td><td class="dim">ก่อนจุดเริ่ม</td></tr>
+      <tr><td>Requirement brief to team</td><td>5 ส.ค.</td><td class="hl">17 ส.ค.</td><td>← จุดที่เลือก เริ่มจากวันที่พิมพ์จริง</td></tr>
+      <tr><td>Adjust project timeline</td><td>6 ส.ค.</td><td class="hl">18 ส.ค.</td><td>cascade ต่อจากตัวก่อนหน้า</td></tr>
+    </table>
+  </section>
+
+  <!-- SLIDE 6: Other date tools -->
+  <section class="slide" id="slide-6">
+    <div class="eyebrow">บทที่ 6 · เครื่องมือจัดวันที่อื่นๆ</div>
+    <h2 class="slide-title">อีก 3 เครื่องมือช่วยจัดวันที่ นอกจาก Recalculate Dates</h2>
+    <div class="three-col">
+      <div class="col compare-box light">
+        <div class="cb-title">📊 Calculate from Sub-tasks</div>
+        <div class="cb-body">Rollup วันที่ของ task พ่อ ให้ครอบคลุมช่วง earliest start – latest end/deadline ของ sub-task ทั้งหมด — ไม่แตะวันที่ sub-task เอง ใช้ตอนแก้วันที่ sub-task มือแล้วอยากอัปเดต parent ให้ตรง</div>
+      </div>
+      <div class="col compare-box light">
+        <div class="cb-title">📅 Adjust Deadline</div>
+        <div class="cb-body">Wizard เลื่อน deadline แบบ cascade ไปยัง task ที่เกี่ยวข้อง พร้อม suggest ช่องว่างที่ไม่ชนกับงานอื่นของ assignee คนเดียวกัน — PM approve ก่อน apply เสมอ</div>
+      </div>
+      <div class="col compare-box light">
+        <div class="cb-title">🔄 Recalculate All (Project)</div>
+        <div class="cb-body">คำนวณทั้งโปรเจกต์รวดเดียวจากหน้า Project — topo-sort ทุก Phase (L1) ตาม dependency ก่อนไล่ cascade ลง L2→L3 ทีละสาย</div>
+      </div>
+    </div>
+    <div class="warn-box" style="margin-top:20px;"><b>Deploy pattern สำหรับทีม dev:</b> ทุกครั้งที่แก้ field/logic การคำนวณวันที่ ต้อง verify ด้วยการเทียบวันที่จริงก่อน-หลังผ่าน RPC เสมอ — "ไม่มี error" ไม่ได้แปลว่า "คำนวณถูก" โดยเฉพาะ logic ที่มีหลาย branch (skip/anchor/cascade) แบบนี้</div>
+  </section>
+
+  <!-- SLIDE 7: Dependency + Conflict -->
+  <section class="slide" id="slide-7">
+    <div class="eyebrow">บทที่ 7 · Dependency &amp; Time Conflict</div>
+    <h2 class="slide-title">Blocked By, Time Conflict Check, และ Find Slot</h2>
+    <div class="two-col">
+      <div class="col-left compare-box light">
+        <div class="cb-title">🔗 Blocked By (Dependency)</div>
+        <div class="cb-body">แท็บ "Blocked By" ใน PTJ Info — เลือก task ที่ต้องเสร็จก่อน (<code>depend_on_ids</code>) ใช้ได้ทุกระดับ ระบบ auto-flip สถานะ + sync Kanban stage อัตโนมัติเมื่อ predecessor เสร็จแล้ว ปลดบล็อกให้เอง</div>
+      </div>
+      <div class="col-right">
+        <div class="compare-box light">
+          <div class="cb-title">⚠️ Time Conflict Check</div>
+          <div class="cb-body">ตรวจ overlap ของงานคนเดียวกันแบบ 2 ทาง แสดง risk dot บน Gantt ทันทีที่ชนกัน</div>
+        </div>
+        <div class="compare-box light">
+          <div class="cb-title">🔍 Find Slot</div>
+          <div class="cb-body">Wizard หาช่องว่างถัดไปที่ assignee ว่างจริง แล้วเลื่อน task + successor ตามให้อัตโนมัติ</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8: Gantt -->
+  <section class="slide" id="slide-8">
+    <div class="eyebrow">บทที่ 8 · Gantt Chart</div>
+    <h2 class="slide-title">Gantt Chart — วางแผนภาพรวมทั้งโปรเจกต์</h2>
+    <div class="three-col">
+      <div class="col compare-box light">
+        <div class="cb-title">WBS Numbers</div>
+        <div class="cb-body">คอลัมน์ # แสดงเลข 1, 1.1, 1.1.1 ตามลำดับชั้นจริง เรียง L1 ก่อนเสมอแล้วค่อยไล่ children (DFS)</div>
+      </div>
+      <div class="col compare-box light">
+        <div class="cb-title">Drag &amp; Drop จัดลำดับ</div>
+        <div class="cb-body">ลากจัดลำดับ sibling ได้ตรงๆ ในหน้า Gantt — เขียนค่า sequence ลง DB ทันที</div>
+      </div>
+      <div class="col compare-box light">
+        <div class="cb-title">Baseline Overlay</div>
+        <div class="cb-body">เก็บ snapshot แผนเดิม (Plan Baseline) แล้วโชว์ ghost bar เทียบกับแผนปัจจุบัน เปิด/ปิดได้ตามต้องการ</div>
+      </div>
+    </div>
+    <div class="note-box" style="margin-top:18px;">มี Today Line, Risk Dots (conflict/overdue), Level Filter (เลือกดูเฉพาะ Phase/Main/Internal) ในหน้าเดียวกัน</div>
+  </section>
+
+  <!-- SLIDE 9: Dashboards -->
+  <section class="slide" id="slide-9">
+    <div class="eyebrow">บทที่ 9 · Dashboard</div>
+    <h2 class="slide-title">3 Dashboard สำหรับ 3 บทบาท</h2>
+    <div class="three-col">
+      <div class="col compare-box light">
+        <div class="cb-title">My Dashboard</div>
+        <div class="cb-body">มุมมอง staff — การ์ด "โฟกัสวันนี้" + My Tasks จัดกลุ่มตาม date-bucket (Overdue/This Week/Later) + chat กับ Project Owner ได้ตรงจาก drawer</div>
+      </div>
+      <div class="col compare-box light">
+        <div class="cb-title">Project Manager Dashboard</div>
+        <div class="cb-body">Project Cards (health color) → Team View (performance/drift/overdue ต่อคน) → Project Detail (milestone + task tree + activity feed) — คลิก task เปิด drawer เดียวกันทุกที่</div>
+      </div>
+      <div class="col compare-box light">
+        <div class="cb-title">WIP Review</div>
+        <div class="cb-body">Health ring ต่อ project + Milestone Risk พร้อมเหตุผล (pace, overdue, blocker) + In Progress board sort ตามความเร่งด่วน + Person View ข้าม project</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 10: Telegram -->
+  <section class="slide" id="slide-10">
+    <div class="eyebrow">บทที่ 10 · Telegram Bot</div>
+    <h2 class="slide-title">แจ้งเตือนและสั่งงานผ่าน Telegram</h2>
+    <div class="case-box">
+      <div class="case-icon">T</div>
+      <div>
+        <div class="case-text-label">Bot</div>
+        <div class="case-text">@MX_nong_MAX_bot — ผูก Telegram Chat ID กับ user ที่ Preferences ก่อนใช้งานครั้งแรก</div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="col-left compare-box light">
+        <div class="cb-title">คำสั่ง (Text Commands)</div>
+        <div class="cb-body"><code>/task</code>, <code>/project</code>, <code>/help</code>, <code>/task update</code> — อัปเดตสถานะ/comment กลับเข้า Odoo ได้จาก Telegram ตรงๆ ไม่ต้องเปิดเว็บ</div>
+      </div>
+      <div class="col-right">
+        <div class="compare-box light">
+          <div class="cb-title">Morning Brief (08:00) + PM Summary (08:30)</div>
+          <div class="cb-body">สรุปงานรายวันแยกตาม role — Task Owner เห็นงานตัวเอง, PM เห็น Project Health Snapshot</div>
+        </div>
+        <div class="compare-box light">
+          <div class="cb-title">Real-time Notify</div>
+          <div class="cb-body">Task unblocked, Milestone deadline เปลี่ยน — ส่งทันทีไม่ต้องรอรอบ cron</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 11: ปิดท้าย -->
+  <section class="slide dark" id="slide-11">
+    <div class="eyebrow">สรุป</div>
+    <h2 class="slide-title" style="color:#fff;">สิ่งที่ต้องจำ 4 ข้อ</h2>
+    <ul class="step-list">
+      <li><span class="step-num">1</span><span class="step-text" style="color:#DDE3E0;">สร้าง Project ก่อนเสมอ ตั้ง <b>Project Code</b> ให้จำง่าย เพราะติดไปกับทุก Task ID</span></li>
+      <li><span class="step-num">2</span><span class="step-text" style="color:#DDE3E0;">ใช้ <b>Apply Template</b> แทนสร้าง sub-task มือทีละตัว — dependency + วันที่คำนวณให้อัตโนมัติ</span></li>
+      <li><span class="step-num">3</span><span class="step-text" style="color:#DDE3E0;"><b>🆕 Recalculate Dates</b> เลือก "เริ่มจาก Sub-task" ได้แล้ว — งานที่เสร็จไปแล้วไม่ถูกเขียนทับอีกต่อไป</span></li>
+      <li><span class="step-num">4</span><span class="step-text" style="color:#DDE3E0;">ติดตามภาพรวมผ่าน <b>Gantt/Dashboard</b> และรับแจ้งเตือน/สั่งงานผ่าน <b>Telegram</b> ได้โดยไม่ต้องเปิดเว็บตลอด</span></li>
+    </ul>
+    <div style="margin-top:22px;font-size:14px;color:#9AA5AC;">Module ptj_project v19.0.1.37.0 · มีคำถามหรือขอ feature เพิ่ม แจ้งทีม dev ได้เลย</div>
+  </section>
+
+</div></div>
+
+<div id="nav">
+  <a class="nav-home" href="../index.html" aria-label="Back to portal home" title="Back to portal home"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 11.5L12 4l8 7.5M6 10v9a1 1 0 0 0 1 1h3v-6h4v6h3a1 1 0 0 0 1-1v-9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  <button onclick="go(-1)" aria-label="Previous slide">‹</button>
+  <span id="pagecount">1 / 12</span>
+  <button onclick="go(1)" aria-label="Next slide">›</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let idx = 0;
+  function render(){
+    slides.forEach((s,i)=>s.classList.toggle('active', i===idx));
+    document.getElementById('pagecount').textContent = (idx+1)+' / '+slides.length;
+  }
+  function go(d){
+    idx = Math.min(slides.length-1, Math.max(0, idx+d));
+    render();
+  }
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight'||e.key===' ') go(1);
+    if(e.key==='ArrowLeft') go(-1);
+  });
+  function scaleStage(){
+    const wrap = document.getElementById('stage-wrap');
+    const stage = document.getElementById('stage');
+    const scale = Math.min(wrap.clientWidth/1280, wrap.clientHeight/720);
+    stage.style.transform = 'scale('+scale+')';
+  }
+  window.addEventListener('resize', scaleStage);
+  scaleStage();
+  render();
+</script>
+</body>
+</html>
