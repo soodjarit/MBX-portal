@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MBX Group — Team Portal</title>
+<title>Scintilla — MBX Team Portal</title>
 <style>
   :root{
     --copper:#B8763E;
@@ -44,9 +44,12 @@
     transition:box-shadow .15s ease, transform .15s ease;
   }
   .doc-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.08);transform:translateY(-1px);}
+  .doc-card.placeholder{cursor:default;opacity:.6;}
+  .doc-card.placeholder:hover{box-shadow:none;transform:none;}
   .doc-icon{flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--copper);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;font-family:Cambria,serif;}
   .doc-title{font-size:15px;font-weight:700;color:var(--charcoal);margin-bottom:2px;}
   .doc-desc{font-size:13px;color:#787B7D;line-height:1.4;}
+  .doc-desc strong{color:var(--copper-dark);}
   .doc-arrow{margin-left:auto;color:var(--copper);font-size:18px;flex-shrink:0;}
 
   footer{margin-top:48px;font-size:13px;color:#9A9D9F;padding-top:20px;border-top:1px solid var(--border);}
@@ -57,10 +60,10 @@
 <div class="topnav">
   <div class="topnav-brand">MBX Group <span>Team Portal</span></div>
   <div class="topnav-links">
-    <a href="index.html" class="tn-link active">หน้าแรก</a>
+    <a href="index.html" class="tn-link">หน้าแรก</a>
     <a href="memberbox.html" class="tn-link">Memberbox</a>
     <a href="emg-o.html" class="tn-link">EMG-O</a>
-    <a href="scintilla.html" class="tn-link">Scintilla</a>
+    <a href="scintilla.html" class="tn-link active">Scintilla</a>
     <a href="btg.html" class="tn-link">BTG</a>
     <a href="internal-tools.html" class="tn-link">เครื่องมือภายใน</a>
   </div>
@@ -68,51 +71,29 @@
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">MBX Group — Odoo 19</div>
-    <h1>ศูนย์รวมเอกสารและระบบ</h1>
-    <div class="sub">รวมลิงก์เว็บไซต์ลูกค้า คู่มือใช้งาน และสไลด์อบรมของทุกโปรเจกต์ในเครือ MBX ไว้ที่เดียว — เลือกโปรเจกต์ด้านล่างเพื่อดูรายละเอียด</div>
+    <div class="eyebrow">MX-SME-J</div>
+    <h1>Scintilla Gioielli</h1>
+    <div class="sub">โครงการ SME demo — สถานะปัจจุบัน 🟡 พักไว้ (ON HOLD, ยังไม่มีลูกค้าใหม่จริง) Phase 11 UAT เสร็จแล้ว พร้อม manual เต็ม</div>
   </header>
 
   <div class="section">
-    <div class="section-head">
-      <div class="section-title">โปรเจกต์ลูกค้า</div>
-      <div class="section-sub">Client Projects</div>
-    </div>
-    <a class="doc-card" href="memberbox.html">
-      <div class="doc-icon">M</div>
-      <div><div class="doc-title">Memberbox</div><div class="doc-desc">Website + Odoo Backend, CDP-CM (Campaign), MX-RFM (Segmentation)</div></div>
-      <div class="doc-arrow">→</div>
-    </a>
-    <a class="doc-card" href="emg-o.html">
-      <div class="doc-icon">E</div>
-      <div><div class="doc-title">EMG-O — Empire Stone × Empire Granite</div><div class="doc-desc">Odoo live site + Project Portal (สถานะงาน, บันทึกตัดสินใจ, เอกสาร)</div></div>
-      <div class="doc-arrow">→</div>
-    </a>
-    <a class="doc-card" href="scintilla.html">
+    <div class="section-head"><div class="section-title">เว็บไซต์ — Live</div></div>
+    <a class="doc-card" href="https://sc.mx-erp.com/" target="_blank" rel="noopener">
       <div class="doc-icon">S</div>
-      <div><div class="doc-title">Scintilla Gioielli</div><div class="doc-desc">MX-SME-J — Odoo demo site</div></div>
-      <div class="doc-arrow">→</div>
-    </a>
-    <a class="doc-card" href="btg.html">
-      <div class="doc-icon">B</div>
-      <div><div class="doc-title">BTG — BreadTalk × Din Tai Fung</div><div class="doc-desc">Odoo demo site ทั้ง 2 บริษัท</div></div>
+      <div><div class="doc-title">Scintilla Gioielli</div><div class="doc-desc">https://sc.mx-erp.com — Demo login: <strong>demosc</strong></div></div>
       <div class="doc-arrow">→</div>
     </a>
   </div>
 
   <div class="section">
-    <div class="section-head">
-      <div class="section-title">เครื่องมือภายใน</div>
-      <div class="section-sub">Internal Tools — ไม่ผูกกับลูกค้ารายเดียว</div>
+    <div class="section-head"><div class="section-title">Project Portal</div></div>
+    <div class="doc-card placeholder">
+      <div class="doc-icon">P</div>
+      <div><div class="doc-title">ยังไม่ได้สร้าง</div><div class="doc-desc">จะทำ Project Portal แบบเดียวกับ EMG-O เมื่อมีลูกค้าใหม่จริงเปิดใช้งานโปรเจกต์นี้อีกครั้ง</div></div>
     </div>
-    <a class="doc-card" href="internal-tools.html">
-      <div class="doc-icon">T</div>
-      <div><div class="doc-title">MX-PTJ, MX-DEV-LAB</div><div class="doc-desc">เครื่องมือบริหารโปรเจกต์ และแนวทางพัฒนา/ส่งมอบงานของทีม</div></div>
-      <div class="doc-arrow">→</div>
-    </a>
   </div>
 
-  <footer>MBX Group Internal System — จัดทำโดยทีมงาน</footer>
+  <footer>MBX Group Internal System — จัดทำโดยทีมงาน · <a href="index.html">← กลับหน้าแรก</a></footer>
 </div>
 </body>
 </html>

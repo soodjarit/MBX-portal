@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Memberbox — MBX Team Portal</title>
+<style>
+  :root{
+    --copper:#B8763E;
+    --copper-dark:#8F5A2C;
+    --charcoal:#2B2E31;
+    --text:#3A3D40;
+    --bg:#F3F1EE;
+    --card:#FFFFFF;
+    --border:#E4DFD8;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);font-family:Calibri,Arial,sans-serif;color:var(--text);}
+  a{color:inherit;}
+
+  .topnav{background:var(--charcoal);padding:0 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  .topnav-brand{color:#fff;font-family:Cambria,serif;font-weight:700;font-size:17px;padding:16px 0;}
+  .topnav-brand span{color:#9AA0A4;font-family:Calibri,Arial,sans-serif;font-weight:400;font-size:13px;margin-left:8px;}
+  .topnav-links{display:flex;gap:4px;flex-wrap:wrap;}
+  .tn-link{padding:16px 14px;font-size:14px;color:#C9CDCF;text-decoration:none;border-bottom:3px solid transparent;font-weight:600;}
+  .tn-link:hover{color:#fff;}
+  .tn-link.active{color:#fff;border-bottom-color:var(--copper);}
+
+  .wrap{max-width:880px;margin:0 auto;padding:44px 24px 100px;}
+  header{margin-bottom:36px;}
+  .eyebrow{font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--copper);font-weight:700;margin-bottom:10px;}
+  h1{font-size:32px;margin:0 0 10px 0;color:var(--charcoal);font-weight:700;font-family:Cambria,serif;}
+  .sub{font-size:15.5px;color:#6B6E70;line-height:1.6;max-width:640px;}
+
+  .section{margin-bottom:44px;}
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--charcoal);}
+  .section-title{font-size:20px;font-weight:700;font-family:Cambria,serif;color:var(--charcoal);}
+  .section-sub{font-size:13px;color:#9A9D9F;}
+
+  .doc-card{
+    display:flex;align-items:center;gap:16px;
+    background:var(--card);border:1px solid var(--border);border-radius:14px;
+    padding:17px 20px;margin-bottom:10px;text-decoration:none;color:inherit;
+    transition:box-shadow .15s ease, transform .15s ease;
+  }
+  .doc-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.08);transform:translateY(-1px);}
+  .doc-card.placeholder{cursor:default;opacity:.6;}
+  .doc-card.placeholder:hover{box-shadow:none;transform:none;}
+  .doc-icon{flex-shrink:0;width:38px;height:38px;border-radius:50%;background:var(--copper);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;font-family:Cambria,serif;}
+  .doc-title{font-size:15px;font-weight:700;color:var(--charcoal);margin-bottom:2px;}
+  .doc-desc{font-size:13px;color:#787B7D;line-height:1.4;}
+  .doc-desc strong{color:var(--copper-dark);}
+  .doc-arrow{margin-left:auto;color:var(--copper);font-size:18px;flex-shrink:0;}
+
+  footer{margin-top:48px;font-size:13px;color:#9A9D9F;padding-top:20px;border-top:1px solid var(--border);}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <div class="topnav-brand">MBX Group <span>Team Portal</span></div>
+  <div class="topnav-links">
+    <a href="index.html" class="tn-link">หน้าแรก</a>
+    <a href="memberbox.html" class="tn-link active">Memberbox</a>
+    <a href="emg-o.html" class="tn-link">EMG-O</a>
+    <a href="scintilla.html" class="tn-link">Scintilla</a>
+    <a href="btg.html" class="tn-link">BTG</a>
+    <a href="internal-tools.html" class="tn-link">เครื่องมือภายใน</a>
+  </div>
+</div>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Memberbox</div>
+    <h1>Website, Odoo Backend และระบบ Loyalty/CDP</h1>
+    <div class="sub">เว็บไซต์และ Odoo backend หลักของ Memberbox พร้อมระบบ Campaign (CDP-CM) และ RFM Segmentation ที่ผูกกับฐานสมาชิก</div>
+  </header>
+
+  <div class="section">
+    <div class="section-head"><div class="section-title">เว็บไซต์ — Live</div></div>
+    <a class="doc-card" href="https://odoo19-mbxai.mx-erp.com/" target="_blank" rel="noopener">
+      <div class="doc-icon">M</div>
+      <div><div class="doc-title">Memberbox — Website + Odoo Backend</div><div class="doc-desc">https://odoo19-mbxai.mx-erp.com — domain หลักของ instance, เข้าเว็บบริษัท Memberbox และ Odoo backend (/web, /odoo) จากที่เดียวกัน — Demo login: <strong>demomxp</strong></div></div>
+      <div class="doc-arrow">→</div>
+    </a>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><div class="section-title">CDP-CM — Campaign &amp; Automated Journey</div></div>
+    <a class="doc-card" href="manual/cdp-cm-manual.html">
+      <div class="doc-icon">C</div>
+      <div><div class="doc-title">คู่มือฉบับเต็ม</div><div class="doc-desc">Flow รวม, ตั้งค่า Campaign 7 แบบ, Customer Journey, Dashboard, Automated Journey — 5 บท</div></div>
+      <div class="doc-arrow">→</div>
+    </a>
+    <a class="doc-card" href="presentations/cdp-cm-training-presentation.html">
+      <div class="doc-icon">1</div>
+      <div><div class="doc-title">สไลด์อบรม (Training Presentation)</div><div class="doc-desc">16 สไลด์ ครบทั้ง 5 บท พร้อม screenshot จริงจากธุรกรรม POS ที่ชำระเงินจริง</div></div>
+      <div class="doc-arrow">→</div>
+    </a>
+    <a class="doc-card" href="presentations/cdp-cm-campaign-types-presentation.html">
+      <div class="doc-icon">2</div>
+      <div><div class="doc-title">8 ประเภทแคมเปญ — สร้างทีละ Step</div><div class="doc-desc">Welcome, Birthday, Tier, Personalize, Inactive/Active Member, Top Spender, RFM Segment Targeting</div></div>
+      <div class="doc-arrow">→</div>
+    </a>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><div class="section-title">MX-RFM — RFM Segmentation Engine</div></div>
+    <div class="doc-card placeholder">
+      <div class="doc-icon">R</div>
+      <div><div class="doc-title">คู่มือฉบับเต็ม</div><div class="doc-desc">กำลังจัดทำ — จะอัปเดตลิงก์ที่นี่เมื่อพร้อมให้ตรวจสอบ</div></div>
+    </div>
+    <a class="doc-card" href="presentations/mx-rfm-presentation.html">
+      <div class="doc-icon">1</div>
+      <div><div class="doc-title">สไลด์ภาพรวมระบบ (System Overview)</div><div class="doc-desc">15 สไลด์ — สถาปัตยกรรม Fact/Interpretation, config module, segment map, dashboard tour, known gaps</div></div>
+      <div class="doc-arrow">→</div>
+    </a>
+    <a class="doc-card" href="presentations/cdp-cm-rfm-atrisk-case-study.html">
+      <div class="doc-icon">2</div>
+      <div><div class="doc-title">กรณีศึกษา: RFM → Campaign (At Risk Win-back)</div><div class="doc-desc">10 สไลด์ — ตัวอย่างจริง 1 use case ตั้งแต่เลือก RFM segment จนถึงลูกค้าได้คูปอง พร้อม screenshot จริงจาก production</div></div>
+      <div class="doc-arrow">→</div>
+    </a>
+    <a class="doc-card" href="https://grafana.mx-erp.com/" target="_blank" rel="noopener">
+      <div class="doc-icon">G</div>
+      <div><div class="doc-title">Grafana Dashboard (Test Access)</div><div class="doc-desc">https://grafana.mx-erp.com/ — Username: <strong>mxp</strong> / Password: <strong>mxp@team</strong></div></div>
+      <div class="doc-arrow">→</div>
+    </a>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><div class="section-title">MXP — Member System</div></div>
+    <div class="doc-card placeholder">
+      <div class="doc-icon">M</div>
+      <div><div class="doc-title">คู่มือฉบับเต็ม</div><div class="doc-desc">กำลังจัดทำ — จะอัปเดตลิงก์ที่นี่เมื่อพร้อมให้ตรวจสอบ</div></div>
+    </div>
+  </div>
+
+  <footer>MBX Group Internal System — จัดทำโดยทีมงาน · <a href="index.html">← กลับหน้าแรก</a></footer>
+</div>
+</body>
+</html>
